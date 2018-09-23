@@ -1,0 +1,11 @@
+#header {
+	margin-top: 50px;
+	margin-bottom: 100px;
+	text-align: center;
+}
+
+
+.map {
+  height: 500px;
+  width: 100%;
+}
