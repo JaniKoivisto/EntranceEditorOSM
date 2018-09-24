@@ -3,6 +3,8 @@ var entranceLayer = new ol.layer.Vector({
   source: entranceSource
 });
 
+var scaleLineControl = new ol.control.ScaleLine();
+
 var map = new ol.Map({
   target: 'map',
   layers: [
@@ -11,6 +13,13 @@ var map = new ol.Map({
     }),
     entranceLayer
   ],
+  controls: ol.control.defaults({
+    attributionOptions: ({
+      collapsible: true
+    })
+  }).extend([
+    scaleLineControl
+  ]),
   view: new ol.View({
     center: ol.proj.fromLonLat([24.94, 60.17]),
     zoom: 6
