@@ -29,9 +29,6 @@ var map = new ol.Map({
   })
 });
 
-
-
-
 map.on('singleclick', function (event) {
   entranceSource.clear();
   coordinates = event.coordinate;
@@ -44,7 +41,6 @@ map.on('singleclick', function (event) {
 
 function writeCoor(array){
   var displayCoor = document.getElementById("nodeCoordinates");
-
   displayCoor.innerHTML = ol.proj.toLonLat(array);
 };
 
