@@ -21,16 +21,35 @@ var map = new ol.Map({
     scaleLineControl
   ]),
   view: new ol.View({
+    // Map and coordinates in WGS84-looks weird
+    // projection: 'EPSG:4326',
+    // center: [24.94, 60.17],
     center: ol.proj.fromLonLat([24.94, 60.17]),
     zoom: 6
   })
 });
 
-map.on('singleclick', function(event) {
+
+
+
+map.on('singleclick', function (event) {
   entranceSource.clear();
-  var coordinates = event.coordinate;
+  coordinates = event.coordinate;
   var newEntranceFeature = new ol.Feature({
     geometry: new ol.geom.Point(coordinates),
   });
   entranceSource.addFeature(newEntranceFeature);
+  writeCoor(coordinates);
 });
+
+function writeCoor(array){
+  var displayCoor = document.getElementById("nodeCoordinates");
+
+  displayCoor.innerHTML = ol.proj.toLonLat(array);
+};
+
+
+
+
+
+
