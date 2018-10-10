@@ -22,7 +22,7 @@ class Form extends Component {
 
     	//POST call
 
-    	fetch('https://api.openstreetmap.org/api/0.6/notes?lat=71.08052142975149&lon=-8.179561614990236&text=test', 
+    	fetch('http://localhost:5000/api/notes?lat=71.08052142975149&lon=-8.179561614990236&text=test', 
 			{ 
 				method: 'POST',
 				})
