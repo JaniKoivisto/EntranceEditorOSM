@@ -4,6 +4,7 @@ import Header from './Header';
 import EntranceCoor from './EntranceCoor';
 import Form from './Form';
 import Map from './MapEmbed';
+import Login from './Login';
 
 class App extends Component {
   constructor(props) {
@@ -33,6 +34,7 @@ class App extends Component {
         <EntranceCoor Lon = {this.state.lon} Lat = {this.state.lat}//entranceCoordinates={this.state.clickedCoordinates}
         />
         <Form />
+        <Login />
         <Map callbackFromParent={this.myCallback} />
       </div>
     );
