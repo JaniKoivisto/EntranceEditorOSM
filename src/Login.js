@@ -44,17 +44,17 @@ class Login extends Component {
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Username:
-                  <input name="username" type="text" required value={this.state.username}
+                  <input className="form-control" name="username" type="text" required value={this.state.username}
                             onChange={this.handleChange} />
                     </label>
                     <br />
                     <label>
                         Password:
-                  <input name="password" type="password" required value={this.state.password}
+                  <input className="form-control" name="password" type="password" required value={this.state.password}
                             onChange={this.handleChange} />
                     </label>
                     <br />
-                    <input type="submit" value="Login" />
+                    <input className="btn btn-primary" type="submit" value="Login" />
                 </form>
             </div>
         );

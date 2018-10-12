@@ -11,7 +11,7 @@ class EntranceCoor extends React.Component {
 		return (
 			<div>
 				<p>Entrance Coordinates: </p>
-				<p id="nodeCoordinates">{this.props.Lon} longitute & {this.props.Lat} latitude</p>
+				<p id="nodeCoordinates">{this.props.entranceLon} longitude & {this.props.entranceLat} latitude</p>
 			</div>
 		);
 	}
