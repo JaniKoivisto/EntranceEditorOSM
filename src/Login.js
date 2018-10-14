@@ -56,6 +56,32 @@ class Login extends Component {
                     <br />
                     <input className="btn btn-primary" type="submit" value="Login" />
                 </form>
+                <br />
+                <p>Add a few tags to the node</p>
+                <form>
+                    <label>
+                        House number:
+                        <input className="form-control" name="number" type="text" //value={this.state.username} onChange={this.handleChange} 
+                        />
+                    </label>
+                    <label>
+                        Street:
+                        <input className="form-control" name="street" type="text" //value={this.state.username} onChange={this.handleChange} 
+                        />
+                    </label>
+                    <label>
+                        Post code:
+                        <input className="form-control" name="code" type="text" //value={this.state.username} onChange={this.handleChange} 
+                        />
+                    </label>
+                        <label>
+                        City:
+                        <input className="form-control" name="city" type="text" //value={this.state.username} onChange={this.handleChange} 
+                        />
+                    </label>
+                    <br />
+                    <input className="btn btn-primary" type="submit" value="Create entrance node" />                    
+                </form>
             </div>
         );
     }

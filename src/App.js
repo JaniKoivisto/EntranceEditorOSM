@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import Header from './Header';
 import EntranceCoor from './EntranceCoor';
 import Form from './Form';
-import Map from './MapEmbed';
+import Map from './MapEmbedVector';
 import Login from './Login';
 
 class App extends Component {
