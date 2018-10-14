@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import osmService as service
 from flask_cors import CORS
 import base64
@@ -39,8 +39,14 @@ def addNode():
             username, password = auth.split(':')
             decoded_username = base64.b64decode(username).decode('utf-8')
             decoded_password = base64.b64decode(password).decode('utf-8')
-
+    
     changeset_id = request.args.get('changesetid')
+    if changeset_id is None:
+        resp_text, resp_code = service.addChangeset(decoded_username, decoded_password)
+        if resp_code is 200:
+            changeset_id = resp_text
+        else:
+            return jsonify({"message" : resp_text, "code" : resp_code})
     lon = request.args.get('lon')
     lat = request.args.get('lat')
 

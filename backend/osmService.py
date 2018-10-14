@@ -9,7 +9,15 @@ def makeNode(changeset_id, lon, lat, entrance_attributes, entrance_address_attri
         ET.SubElement(node, "tag", k=key, v=value)
     for key, value in entrance_address_attributes.items():
         ET.SubElement(node, "tag", k="addr:" + key, v=value)
-    xml = ET.dump(osm)
+    xml = ET.tostring(osm)
+    return xml
+
+def makeCangeset(created_by):
+    osm = ET.Element("osm")
+    changeset = ET.SubElement(osm, "changeset")
+    ET.SubElement(changeset, "tag", k="created_by", v=created_by)
+    ET.SubElement(changeset, "tag", k="comment", v='Building entrance editing')
+    xml = ET.tostring(osm)
     return xml
 
 def addNote(params):
@@ -24,4 +32,13 @@ def addNode(changeset_id, lon, lat, entrance_attributes, entrance_address_attrib
     headers = {'Content-Type': 'application/xml'}
     xml = makeNode(changeset_id, lon, lat, entrance_attributes, entrance_address_attributes)
     response = requests.put('https://api.openstreetmap.org/api/0.6/node/create', data=xml, headers=headers, auth=(str(username), str(password)))
-    return jsonify({"message" : response.text, "code" : response.status_code})
+    if response.status_code is 200:
+        return jsonify({"message" : response.text, "changesetid" : changeset_id})
+    else:
+        return jsonify({"message" : response.text, "code" : response.status_code})
+
+def addChangeset(username , password):
+    headers = {'Content-Type': 'application/xml'}
+    xml = makeCangeset(username)
+    response = requests.put('https://api.openstreetmap.org/api/0.6/changeset/create', data=xml, headers=headers, auth=(str(username), str(password)))
+    return response.text, response.status_code
