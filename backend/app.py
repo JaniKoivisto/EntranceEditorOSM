@@ -20,8 +20,7 @@ def loginOSM():
     decoded_username = ''
     decoded_password = ''
     if request.headers.get('Authorization'):
-        decode_username, decoded_password = utils.authDecoder(request)
-        
+        decoded_username, decoded_password = utils.authDecoder(request)
     response = service.loginOSM(decoded_username, decoded_password)
     return response
 
@@ -31,7 +30,7 @@ def addNode():
     decoded_password = ''
     
     if request.headers.get('Authorization'):
-        decode_username, decoded_password = utils.authDecoder(request)
+        decoded_username, decoded_password = utils.authDecoder(request)
 
     changeset_id = request.args.get('changesetid')
     if changeset_id is None:
