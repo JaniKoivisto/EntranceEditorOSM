@@ -160,16 +160,16 @@ class MapEmbed extends React.Component {
 	    geometry: new Point( clickedCoordinate ),
 	  });
 
-		// var iconStyle = new Style({
-  //   	image: new Icon( ({
-  //     anchor: [0.5, 32],
-  //     anchorXUnits: 'fraction',
-  //     anchorYUnits: 'pixels',
-  //     src: icon
-  //   	}))
-  // 	});
+		var iconStyle = new Style({
+    	image: new Icon( ({
+      anchor: [0.5, 32],
+      anchorXUnits: 'fraction',
+      anchorYUnits: 'pixels',
+      src: icon
+    	}))
+  	});
 
-  // 	newEntranceFeature.setStyle(iconStyle);
+  	newEntranceFeature.setStyle(iconStyle);
 
 		this.state.entranceSource.addFeature(newEntranceFeature);
 
