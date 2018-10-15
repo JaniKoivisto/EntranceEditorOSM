@@ -14,6 +14,7 @@ import {bbox as bboxStrategy} from 'ol/loadingstrategy.js';
 import {transformExtent} from 'ol/proj.js';
 import {Circle as CircleStyle, Fill, Stroke} from 'ol/style.js';
 import {Icon, Style} from 'ol/style.js';
+import {Draw, Snap} from 'ol/interaction.js';
 import icon from './pin.png';
 
 class MapEmbed extends React.Component {
@@ -23,7 +24,16 @@ class MapEmbed extends React.Component {
 	    map: null,
 	    entranceSource: null,
 	    entranceLayer: null,
-	    buildingSource: null
+			buildingSource: null,
+			iconStyle: new Style({
+				zIndex: 101,
+				image: new Icon( ({
+				anchor: [0.5, 32],
+				anchorXUnits: 'fraction',
+				anchorYUnits: 'pixels',
+				src: icon
+				}))
+			})
 		};
 	}
 
@@ -102,7 +112,7 @@ class MapEmbed extends React.Component {
 		    new TileLayer({
 		      source: new OSM()
 		    }),
-		    entranceLayer, buildings
+		    buildings, entranceLayer
 		  ],
 
 			controls: defaultControls({
@@ -119,6 +129,26 @@ class MapEmbed extends React.Component {
 		    zoom: 17
 		  })
 		});
+
+		var EntranceDraw = {
+			init: function() {
+				map.addInteraction(this.Point);
+				this.Point.setActive(true);
+			},
+			Point: new Draw({
+				source: buildingSource,
+				type: 'Point',
+				style: this.state.iconStyle
+			})
+		};
+
+		EntranceDraw.init();
+
+		var EntranceSnap = new Snap({
+			source: buildings.getSource()
+		});
+
+		map.addInteraction(EntranceSnap);
 
 //onClick function
 
@@ -159,17 +189,8 @@ class MapEmbed extends React.Component {
 		var newEntranceFeature = new Feature({
 	    geometry: new Point( clickedCoordinate ),
 	  });
-
-		var iconStyle = new Style({
-    	image: new Icon( ({
-      anchor: [0.5, 32],
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'pixels',
-      src: icon
-    	}))
-  	});
-
-  	newEntranceFeature.setStyle(iconStyle);
+		
+  	newEntranceFeature.setStyle(this.state.iconStyle);
 
 		this.state.entranceSource.addFeature(newEntranceFeature);
 
