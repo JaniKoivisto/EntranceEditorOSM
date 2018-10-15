@@ -60,5 +60,11 @@ def addNode():
     response = service.addNode(changeset_id, lon, lat, entrance_attributes_feature, entrance_address_attributes_feature, decoded_username, decoded_password)
     return response
 
+@app.route("/api/node", methods=['GET'])
+def getNode():
+    nodeId = request.args.get('nodeid')
+    response = service.getNode(nodeId)
+    return response
+
 if __name__ == "__main__":
     app.run(debug=True)

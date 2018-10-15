@@ -1,6 +1,8 @@
 from flask import jsonify
 import xml.etree.cElementTree as ET
 import requests
+import xmltodict
+import json
 
 def makeNode(changeset_id, lon, lat, entrance_attributes, entrance_address_attributes):
     osm = ET.Element("osm")
@@ -42,3 +44,7 @@ def addChangeset(username , password):
     xml = makeCangeset(username)
     response = requests.put('https://api.openstreetmap.org/api/0.6/changeset/create', data=xml, headers=headers, auth=(str(username), str(password)))
     return response.text, response.status_code
+
+def getNode(id):
+    response = requests.get('https://api.openstreetmap.org/api/0.6/node/{0}'.format(id))
+    return json.dumps(xmltodict.parse(response.text))
