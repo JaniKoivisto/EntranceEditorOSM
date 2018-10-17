@@ -8,11 +8,16 @@ class Login extends Component {
             password: '',
             encodedUsername: '',
             encodedPassword: '',
+            number: '',
+            street: '',
+            code: '',
+            city: '',
             login: false
         };
         
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleNodeSubmit = this.handleNodeSubmit.bind(this);
     }
     
     handleChange(event) {
@@ -56,31 +61,38 @@ class Login extends Component {
         
         event.preventDefault();
     }
+
+    //Handle node tags
+
+    handleNodeSubmit(event) {
+        console.log(this.state.number, this.state.street, this.state.code, this.state.city);
+       event.preventDefault(); 
+    }
     
     render() {
         if (this.state.login) {
             return (
                 <div id="correctLogin">
                 <p>Add a few tags to the node</p>
-                    <form>
+                    <form onSubmit={this.handleNodeSubmit}>
                         <label>
                             House number:
-                            <input className="form-control" name="number" type="text" //value={this.state.username} onChange={this.handleChange} 
+                            <input className="form-control" name="number" type="text" value={this.state.number} onChange={this.handleChange} 
                             />
                         </label>
                         <label>
                             Street:
-                            <input className="form-control" name="street" type="text" //value={this.state.username} onChange={this.handleChange} 
+                            <input className="form-control" name="street" type="text" value={this.state.street} onChange={this.handleChange} 
                             />
                         </label>
                         <label>
                             Post code:
-                            <input className="form-control" name="code" type="text" //value={this.state.username} onChange={this.handleChange} 
+                            <input className="form-control" name="code" type="text" value={this.state.code} onChange={this.handleChange} 
                             />
                         </label>
                             <label>
                             City:
-                            <input className="form-control" name="city" type="text" //value={this.state.username} onChange={this.handleChange} 
+                            <input className="form-control" name="city" type="text" value={this.state.city} onChange={this.handleChange} 
                             />
                         </label>
                         <br />
