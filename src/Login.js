@@ -66,7 +66,30 @@ class Login extends Component {
 
     handleNodeSubmit(event) {
         console.log(this.state.number, this.state.street, this.state.code, this.state.city);
-       event.preventDefault(); 
+        let headers = new Headers();
+        headers.set('Authorization', 'Basic ' + this.state.encodedUsername + ":" + this.state.encodedPassword);
+        headers.set('content-type', 'application/json');
+        
+        const addNode = async () => {
+            const response = await fetch('http://localhost:5000/api/node?lat=' + this.props.entranceLat + '&lon=' + this.props.entranceLon + '&housenumber=' + this.state.number +
+            '&street=' + this.state.street + '&postcode=' + this.state.code + '&city=' + this.state.city + '&entrance=yes'
+            ,
+            { 
+                method: 'POST',
+                headers: headers
+            });
+            
+            const json = await response.json();
+            //TODO: save changesetid
+            const nodeId = json.message;
+            const changesetId = json.changesetid;
+            console.log("nodeId: " + nodeId + " changeSet:" + changesetId);
+
+        }
+        
+        addNode();
+        event.preventDefault();
+
     }
     
     render() {

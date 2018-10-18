@@ -47,7 +47,7 @@ class App extends Component {
                 </div>
                 <div className="tab-pane fade" id="OSM" role="tabpanel" aria-labelledby="profile-tab">
                   
-                  <Login />
+                  <Login entranceLon = {this.state.entranceLongitude} entranceLat = {this.state.entranceLatitude}/>
                 </div>
               </div>
 
