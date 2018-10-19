@@ -9,12 +9,16 @@ import VectorLayer from 'ol/layer/Vector';
 import {defaults as defaultControls, ScaleLine} from 'ol/control.js';
 import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
+import {Icon, Style} from 'ol/style.js';
+import icon from './pin.png';
 
 class MapEmbed extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-			coordinates: null
+	    map: null,
+	    entranceSource: null,
+	    entranceLayer: null,
 		};
 	}
 
@@ -79,26 +83,32 @@ class MapEmbed extends React.Component {
   handleMapClick(event) {
 
 // derive map coordinate (references map from Wrapper Component state)
-    this.setState({
-    	coordinates: this.state.map.getCoordinateFromPixel(event.pixel)
-    });
+    var clickedCoordinate = this.state.map.getCoordinateFromPixel(event.pixel);
 
-	alert(toLonLat(this.state.coordinates));
-		var clickedCoordinate = toLonLat(this.state.coordinates);
-		var longitude = clickedCoordinate[0];
-		var latitude = clickedCoordinate[1];
+		var lon = toLonLat(clickedCoordinate)[0];
+		this.props.updateLongitude(lon);
+
+		var lat = toLonLat(clickedCoordinate)[1];
+		this.props.updateLatitude(lat);
 	    // create Point geometry from clicked coordinate
     //var clickedPointGeom = new Point( this.state.coordinates );
 
 	var newEntranceFeature = new Feature({
-    geometry: new Point( this.state.coordinates ),
+    geometry: new Point( clickedCoordinate ),
   });
 
-	this.state.entranceSource.addFeature(newEntranceFeature);
-	//passing entrance coordinates to parent component
-	this.props.callbackFromParent(longitude, latitude);
+  var iconStyle = new Style({
+    	image: new Icon( ({
+      anchor: [0.5, 32],
+      anchorXUnits: 'fraction',
+      anchorYUnits: 'pixels',
+      src: icon//openlayers.org/en/v3.8.2/examples/data/icon.png'
+    	}))
+  	});
 
-	return clickedCoordinate
+  	newEntranceFeature.setStyle(iconStyle);
+
+	this.state.entranceSource.addFeature(newEntranceFeature);
 
   }
 

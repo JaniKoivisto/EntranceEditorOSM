@@ -18,16 +18,16 @@ class Form extends Component {
   }
 
   handleSubmit(event) {
-    alert(this.state.userName + ' says: ' + this.state.userText);
-
     	//POST call
 
-    	fetch('https://api.openstreetmap.org/api/0.6/notes?lat=71.08052142975149&lon=-8.179561614990236&text=test', 
+    	fetch('http://localhost:5000/api/notes?lat=' + this.props.entranceLat + '&lon=' + this.props.entranceLon + '&text=' + this.state.userText, 
 			{ 
 				method: 'POST',
 				})
 			.then(res => console.log(res))
 			.catch(err => console.log('Error', err));
+
+			this.setState({ userText: '' });
 
     event.preventDefault();
   }
@@ -38,18 +38,12 @@ class Form extends Component {
 				<div>
 				<form onSubmit={this.handleSubmit}>
 	        <label>
-	          Name:
-	          <input name="userName" type="text" value={this.state.userName}
+	          Comment:
+	          <textarea className="form-control" name="userText" type="text" value={this.state.userText}
 	          onChange={this.handleChange}/>
 	        </label>
 	        <br />
-	        <label>
-	          Other text:
-	          <textarea name="userText" type="text" value={this.state.userText}
-	          onChange={this.handleChange}/>
-	        </label>
-	        <br />
-	        <input type="submit" value="Submit" />
+	        <input className="btn btn-primary" type="submit" value="Submit" />
       </form>
       </div>
 			);
