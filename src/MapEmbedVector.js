@@ -25,15 +25,15 @@ class MapEmbed extends React.Component {
 	    entranceSource: null,
 	    entranceLayer: null,
 			buildingSource: null,
-			iconStyle: new Style({
-				zIndex: 101,
-				image: new Icon( ({
-				anchor: [0.5, 32],
-				anchorXUnits: 'fraction',
-				anchorYUnits: 'pixels',
-				src: icon
-				}))
-			})
+			// iconStyle: new Style({
+			// 	zIndex: 101,
+			// 	image: new Icon( ({
+			// 	anchor: [0.5, 32],
+			// 	anchorXUnits: 'fraction',
+			// 	anchorYUnits: 'pixels',
+			// 	src: icon
+			// 	}))
+			// })
 		};
 	}
 
@@ -69,6 +69,7 @@ class MapEmbed extends React.Component {
             });
             buildingSource.addFeatures(features);
           });
+          var map
           var query = '(node(' +
               epsg4326Extent[1] + ',' + epsg4326Extent[0] + ',' +
               epsg4326Extent[3] + ',' + epsg4326Extent[2] +
@@ -138,7 +139,7 @@ class MapEmbed extends React.Component {
 			Point: new Draw({
 				source: buildingSource,
 				type: 'Point',
-				style: this.state.iconStyle
+				//style: this.state.iconStyle
 			})
 		};
 
@@ -190,7 +191,7 @@ class MapEmbed extends React.Component {
 	    geometry: new Point( clickedCoordinate ),
 	  });
 		
-  	newEntranceFeature.setStyle(this.state.iconStyle);
+  	//newEntranceFeature.setStyle(this.state.iconStyle);
 
 		this.state.entranceSource.addFeature(newEntranceFeature);
 

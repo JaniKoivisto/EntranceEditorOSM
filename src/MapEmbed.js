@@ -11,6 +11,7 @@ import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
 import {Icon, Style} from 'ol/style.js';
 import icon from './pin.png';
+import { getCenter, getBottomLeft, getTopRight } from 'ol/extent';
 
 class MapEmbed extends React.Component {
 	constructor() {
@@ -19,19 +20,37 @@ class MapEmbed extends React.Component {
 	    map: null,
 	    entranceSource: null,
 	    entranceLayer: null,
+	    entranceMarker: null
 		};
 	}
 
 
 	componentDidMount() {
+    var entranceMarker = new Feature({
+			geometry: new Point(fromLonLat([24.94, 60.17]))
+		});
 
-		var entranceSource = new VectorSource({});
+		var iconStyle = new Style({
+    	image: new Icon( ({
+      anchor: [0.5, 16],
+      anchorXUnits: 'fraction',
+      anchorYUnits: 'pixels',
+      src: icon//openlayers.org/en/v3.8.2/examples/data/icon.png'
+    	}))
+  	});
+
+		entranceMarker.setStyle(iconStyle);
+
+		var entranceSource = new VectorSource({
+			features: [entranceMarker]
+		});
+
 		var entranceLayer = new VectorLayer({
 		  source: entranceSource
-
 		});
 		
 		var scaleLineControl = new ScaleLine();
+
 
 		const map = new Map({
 		  target: this.refs.mapContainer,
@@ -51,66 +70,62 @@ class MapEmbed extends React.Component {
 			  ]),
 
 		  view: new View({
-		    center: fromLonLat([24.94, 60.17]),
+		    center: fromLonLat([24.94, 60.17]),//user's position here
 		    zoom: 6
 		  })
 		});
 
-//onClick function
+		this.setState({ 
+      map: map,
+      entranceSource: entranceSource,
+      entranceLayer: entranceLayer,
+      entranceMarker: entranceMarker
+    });
 
-	map.on('click', this.handleMapClick.bind(this));
-
-	    // save map and layer references to local state
-	    this.setState({ 
-	      map: map,
-	      entranceSource: entranceSource,
-	      entranceLayer: entranceLayer,
-	    });
-
+    //map.on('moveend', this.handleMoveEnd.bind(this));
  //end of didMount
 
 	}
 
-	// pass new features from props into the OpenLayers layer object
-  // componentDidUpdate(prevProps, prevState) {
-  //   this.state.entranceLayer.setSource(
-  //     new VectorSource({
-  //       features: this.props.routes
-  //     })
-  //   );
+	 //  componentDidUpdate(prevProps, prevState) {
+  //   this.state.map.on('moveend', this.handleMapPan.bind(this));
+
+
   // }
 
-  handleMapClick(event) {
+  // handleMoveStart(event){
+  // 	this.setState({entranceCoordinate: this.state.map.getView().getCenter()})
+  // }
+
+  handleMoveEnd(coordinate) {
+  	// var extent = this.state.map.getView().calculateExtent(this.state.map.getSize());
+  	// var bottomLeft = toLonLat(getBottomLeft(extent));
+  	// var topRight = toLonLat(getTopRight(extent));
+  	var entranceCoordinates = this.state.map.getView().getCenter();
+		this.state.entranceMarker.getGeometry().setCoordinates(entranceCoordinates);
+
+		// = new Feature({
+		// 	geometry: new Point(entranceCoordinate)
+		// });
+
 
 // derive map coordinate (references map from Wrapper Component state)
-    var clickedCoordinate = this.state.map.getCoordinateFromPixel(event.pixel);
-
-		var lon = toLonLat(clickedCoordinate)[0];
+		var lon = toLonLat(this.entranceCoordinates)[0];
 		this.props.updateLongitude(lon);
 
-		var lat = toLonLat(clickedCoordinate)[1];
+		var lat = toLonLat(this.entranceCoordinates)[1];
 		this.props.updateLatitude(lat);
-	    // create Point geometry from clicked coordinate
-    //var clickedPointGeom = new Point( this.state.coordinates );
 
-	var newEntranceFeature = new Feature({
-    geometry: new Point( clickedCoordinate ),
-  });
+	    //create Point geometry from clicked coordinate
 
-  var iconStyle = new Style({
-    	image: new Icon( ({
-      anchor: [0.5, 32],
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'pixels',
-      src: icon//openlayers.org/en/v3.8.2/examples/data/icon.png'
-    	}))
-  	});
+		var newEntranceFeature = new Feature({
+	    geometry: new Point( this.entranceCoordinates ),
+	  });
 
-  	newEntranceFeature.setStyle(iconStyle);
-
-	this.state.entranceSource.addFeature(newEntranceFeature);
+		this.state.entranceSource.addFeature(newEntranceFeature);
 
   }
+
 
 
 	render () {

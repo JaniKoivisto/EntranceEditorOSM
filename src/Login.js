@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import $ from 'jquery';
 
 class Login extends Component {
     constructor(props) {
@@ -6,71 +7,59 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
-            encodedUsername: '',
-            encodedPassword: '',
             number: '',
             street: '',
             code: '',
             city: '',
-            login: false
+            response: false
         };
-        
+
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleNodeSubmit = this.handleNodeSubmit.bind(this);
     }
-    
+
+
+
     handleChange(event) {
         this.setState({ [event.target.name]: event.target.value });
     }
-    
+
     handleSubmit(event) {
         const encodedUsername = new Buffer(this.state.username).toString('base64');
         const encodedPassword = new Buffer(this.state.password).toString('base64');
-        let successfullLogin = false;
-        let UNAUTHORIZED = 401;
-        let headers = new Headers();
-        headers.set('Authorization', 'Basic ' + encodedUsername + ":" + encodedPassword);
-        headers.set('content-type', 'application/json');
-        
-        const loginRequest = async () => {
-            const response = await fetch('http://localhost:5000/api/login',
-            { 
-                method: 'GET',
-                headers: headers
-            });
-            
-            const json = await response.json();
-            
-            if (json.code === UNAUTHORIZED) {
-                alert(json.message);
-                successfullLogin = false;
+        $.ajax({
+            url: "http://localhost:5000/api/login",
+            type: 'GET',
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader('Authorization', 'Basic ' + encodedUsername + ':' + encodedPassword);
+
+            },
+            success: function (data) {
+                var response = data;
+                console.log(response);
+            },
+            error: function () {
+                console.log("Request failed");
             }
-            else {
-                successfullLogin = true;
-            }
-            
-            this.setState({
-                encodedUsername: encodedUsername,
-                encodedPassword: encodedPassword,
-                login: successfullLogin
-            });
-        }
-        
-        loginRequest();
-        
+        })
+
+        //Change for successfull response
+        this.setState({
+            response: true
+        });
+
+
         event.preventDefault();
     }
-
-    //Handle node tags
 
     handleNodeSubmit(event) {
         console.log(this.state.number, this.state.street, this.state.code, this.state.city);
        event.preventDefault(); 
     }
-    
+
     render() {
-        if (this.state.login) {
+        if (this.state.response) {
             return (
                 <div id="correctLogin">
                 <p>Add a few tags to the node</p>
@@ -123,5 +112,5 @@ class Login extends Component {
         }
     }
 }
-        
+
 export default Login;
