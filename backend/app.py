@@ -42,7 +42,8 @@ def addNode():
     lon = request.args.get('lon')
     lat = request.args.get('lat')
 
-    entrance_attributes = ['yes', 'main', 'service', 'exit', 'home']
+    #TODO: Add support for multiple entrance keys
+    entrance_attributes = ['entrance']
     entrance_attributes_feature = {}
     for attribute in entrance_attributes:
         if attribute in request.args:

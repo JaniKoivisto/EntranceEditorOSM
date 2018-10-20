@@ -13,7 +13,7 @@ class Modal extends Component {
 		          	<button type="button" className="close" data-dismiss="modal">&times;</button>
 		        	</div>
 		        <div className="modal-body">
-		          <p>Do you want to log in with OSM credits?</p>
+		          <p>Do you want to log in with OpenStreetMap credits?</p>
 		        </div>
 		        <div className="modal-footer">
 		          <button type="button" className="btn btn-primary" data-dismiss="modal">Yes</button>
