@@ -11,7 +11,7 @@ import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
 import {Icon, Style} from 'ol/style.js';
 import icon from './pin.png';
-import { getCenter, getBottomLeft, getTopRight } from 'ol/extent';
+import { getCenter } from 'ol/extent';
 
 class MapEmbed extends React.Component {
 	constructor() {
@@ -82,50 +82,30 @@ class MapEmbed extends React.Component {
       entranceMarker: entranceMarker
     });
 
-    //map.on('moveend', this.handleMoveEnd.bind(this));
- //end of didMount
+		//detect center change
+		map.getView().on('change:center', this.handleMapPan.bind(this));
 
+ //end of didMount
 	}
 
-	 //  componentDidUpdate(prevProps, prevState) {
-  //   this.state.map.on('moveend', this.handleMapPan.bind(this));
 
+  handleMapPan(coordinate) {
 
-  // }
-
-  // handleMoveStart(event){
-  // 	this.setState({entranceCoordinate: this.state.map.getView().getCenter()})
-  // }
-
-  handleMoveEnd(coordinate) {
-  	// var extent = this.state.map.getView().calculateExtent(this.state.map.getSize());
-  	// var bottomLeft = toLonLat(getBottomLeft(extent));
-  	// var topRight = toLonLat(getTopRight(extent));
+  	//var extent = this.state.map.getView().calculateExtent(this.state.map.getSize());
   	var entranceCoordinates = this.state.map.getView().getCenter();
+  	//console.log(entranceCoordinates);
 		this.state.entranceMarker.getGeometry().setCoordinates(entranceCoordinates);
-
-		// = new Feature({
-		// 	geometry: new Point(entranceCoordinate)
-		// });
 
 
 // derive map coordinate (references map from Wrapper Component state)
-		var lon = toLonLat(this.entranceCoordinates)[0];
+		var lon = toLonLat(entranceCoordinates)[0];
 		this.props.updateLongitude(lon);
 
-		var lat = toLonLat(this.entranceCoordinates)[1];
+		var lat = toLonLat(entranceCoordinates)[1];
 		this.props.updateLatitude(lat);
-
-	    //create Point geometry from clicked coordinate
-
-		var newEntranceFeature = new Feature({
-	    geometry: new Point( this.entranceCoordinates ),
-	  });
-
-		this.state.entranceSource.addFeature(newEntranceFeature);
+		console.log(lat, lon);
 
   }
-
 
 
 	render () {

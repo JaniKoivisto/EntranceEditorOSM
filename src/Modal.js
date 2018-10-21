@@ -4,7 +4,7 @@ class Modal extends Component {
 
   render() {
   return (
-    <div class="container">
+    <div className="container">
 		  <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#myModal">Open Modal</button>
 		  <div className="modal fade" id="myModal" role="dialog">
 		    <div className="modal-dialog">
