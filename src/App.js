@@ -13,10 +13,28 @@ class App extends Component {
     this.state = {
       entranceLongitude: null,
       entranceLatitude: null,
-      osmUser: false,
+      isOpen: false,
       };
 
+      this.toggleModal = this.toggleModal.bind(this);
+
   }
+
+  componentDidMount() {
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+
+  };
+
+  toggleModal(event) {
+
+    this.setState({
+      isOpen: !this.state.isOpen,
+    });
+
+    event.preventDefault();
+  };
 
 
 
@@ -29,9 +47,10 @@ class App extends Component {
       return (
         <div className="App">        
           <Navbar />
-          <Modal />
           <EntranceCoor entranceLon = {this.state.entranceLongitude} entranceLat = {this.state.entranceLatitude}/>
-          <Map updateLongitude = {this.updateLongitude} updateLatitude = {this.updateLatitude} />    
+          <Map updateLongitude = {this.updateLongitude} updateLatitude = {this.updateLatitude} />
+          <Modal show={this.state.isOpen} onClose={this.toggleModal}>
+          </Modal>  
         </div>
       );
   }
