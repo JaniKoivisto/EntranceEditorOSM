@@ -46,6 +46,7 @@ class Navbar extends Component {
 							<div className="input-group">
 							  <select className="custom-select" id="inputGroupSelect04" value={this.state.entranceType}
 	          onChange={this.handleChange}>
+	          			<option value="choose">Choose entrance type...</option>
 							    <option value="main">main</option>
 							    <option value="service">service</option>
 							    <option value="exit">exit</option>
