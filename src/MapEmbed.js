@@ -111,7 +111,7 @@ class MapEmbed extends React.Component {
 	
 	render () {
 		return (
-			<div ref="mapContainer"></div>
+			<div ref="mapContainer" style={{width: '100%', height: '100%', position:'fixed'}}></div>
 			);
 		}
 
