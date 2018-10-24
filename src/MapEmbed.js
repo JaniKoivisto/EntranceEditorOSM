@@ -17,105 +17,106 @@ class MapEmbed extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-	    map: null,
-	    entranceSource: null,
-	    entranceLayer: null,
-	    entranceMarker: null
+			map: null,
+			entranceSource: null,
+			entranceLayer: null,
+			entranceMarker: null
 		};
 	}
-
-
+	
+	
 	componentDidMount() {
-    var entranceMarker = new Feature({
+		var entranceMarker = new Feature({
 			geometry: new Point(fromLonLat([24.94, 60.17]))
 		});
-
+		
 		var iconStyle = new Style({
-    	image: new Icon( ({
-      anchor: [0.5, 16],
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'pixels',
-      src: icon//openlayers.org/en/v3.8.2/examples/data/icon.png'
-    	}))
-  	});
-
+			image: new Icon( ({
+				anchor: [0.5, 16],
+				anchorXUnits: 'fraction',
+				anchorYUnits: 'pixels',
+				src: icon//openlayers.org/en/v3.8.2/examples/data/icon.png'
+			}))
+		});
+		
 		entranceMarker.setStyle(iconStyle);
-
+		
 		var entranceSource = new VectorSource({
 			features: [entranceMarker]
 		});
-
+		
 		var entranceLayer = new VectorLayer({
-		  source: entranceSource
+			updateWhileInteracting: true,
+			source: entranceSource
 		});
 		
 		var scaleLineControl = new ScaleLine();
-
-
+		
+		
 		const map = new Map({
-		  target: this.refs.mapContainer,
-		  layers: [
-		    new TileLayer({
-		      source: new OSM()
-		    }),
-		    entranceLayer
-		  ],
-
+			target: this.refs.mapContainer,
+			layers: [
+				new TileLayer({
+					source: new OSM()
+				}),
+				entranceLayer
+			],
+			
 			controls: defaultControls({
-			    attributionOptions: ({
-			      collapsible: true
-			    })
-			  }).extend([
-			    scaleLineControl
-			  ]),
-
-		  view: new View({
-		    center: fromLonLat([24.94, 60.17]),//user's position here
-		    zoom: 6
-		  })
+				attributionOptions: ({
+					collapsible: true
+				})
+			}).extend([
+				scaleLineControl
+			]),
+			
+			view: new View({
+				center: fromLonLat([24.94, 60.17]),//user's position here
+				zoom: 6
+			})
 		});
-
+		
 		this.setState({ 
-      map: map,
-      entranceSource: entranceSource,
-      entranceLayer: entranceLayer,
-      entranceMarker: entranceMarker
-    });
-
+			map: map,
+			entranceSource: entranceSource,
+			entranceLayer: entranceLayer,
+			entranceMarker: entranceMarker
+		});
+		
 		//detect center change
-		map.getView().on('change:center', this.handleMapPan.bind(this));
-
- //end of didMount
+		map.on('pointerdrag', this.handleMapPan.bind(this));
+		map.on('postrender', this.handleMapPan.bind(this));
+		
+		//end of didMount
 	}
-
-
-  handleMapPan(coordinate) {
-
-  	//var extent = this.state.map.getView().calculateExtent(this.state.map.getSize());
-  	var entranceCoordinates = this.state.map.getView().getCenter();
-  	//console.log(entranceCoordinates);
+	
+	
+	handleMapPan(coordinate) {
+		
+		//var extent = this.state.map.getView().calculateExtent(this.state.map.getSize());
+		var entranceCoordinates = this.state.map.getView().getCenter();
+		//console.log(entranceCoordinates);
 		this.state.entranceMarker.getGeometry().setCoordinates(entranceCoordinates);
-
-
-// derive map coordinate (references map from Wrapper Component state)
+		
+		
+		// derive map coordinate (references map from Wrapper Component state)
 		var lon = toLonLat(entranceCoordinates)[0];
 		this.props.updateLongitude(lon);
-
+		
 		var lat = toLonLat(entranceCoordinates)[1];
 		this.props.updateLatitude(lat);
-		console.log(lat, lon);
-
-  }
-
-
+		
+	}
+	
+	
 	render () {
-	    return (
-	      <div ref="mapContainer"> </div>
-	    );
-	  }
+		return (
+			<div ref="mapContainer"></div>
+			);
+		}
 
-}
-
-
-
-export default MapEmbed;
+	}
+	
+	
+	
+	export default MapEmbed;
