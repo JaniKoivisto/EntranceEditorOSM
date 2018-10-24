@@ -14,6 +14,7 @@ class App extends Component {
       entranceLongitude: null,
       entranceLatitude: null,
       isOpen: false,
+      osmUser: false,
       };
 
       this.toggleModal = this.toggleModal.bind(this);
@@ -38,6 +39,7 @@ class App extends Component {
 
 
 
+
   updateLongitude = (entranceLongitude) => {this.setState({ entranceLongitude })};
 
   updateLatitude = (entranceLatitude) => {this.setState({ entranceLatitude })};
@@ -46,7 +48,7 @@ class App extends Component {
   render() {
       return (
         <div className="App">        
-          <Navbar />
+          <Navbar osmUser= {this.state.osmUser} lon={this.state.entranceLongitude} lat={this.state.entranceLatitude}/>
           <EntranceCoor entranceLon = {this.state.entranceLongitude} entranceLat = {this.state.entranceLatitude}/>
           <Map updateLongitude = {this.updateLongitude} updateLatitude = {this.updateLatitude} />
           <Modal show={this.state.isOpen} onClose={this.toggleModal}>

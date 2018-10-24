@@ -18,16 +18,20 @@ class Navbar extends Component {
 
    handleSubmit(event) {
 
-  //   	//POST call
-  //   	fetch('https://api.openstreetmap.org/api/0.6/notes?lat=' + this.props.entranceLat + '&lon=' + this.props.entranceLon + '&text=' + this.state.userText, 
-		// 	{ 
-		// 		method: 'POST',
-		// 		})
-		// 	.then(res => alert("Your note has been sent") )
-		// 	.catch(err => console.log('Error', err));
+		if(this.props.osmUser) {
+			console.log('no osm login');
 
-		// this.setState({ userText: '' });
-		alert(this.state.entranceType)
+		} else {
+			alert(this.state.entranceType)
+
+			fetch('http://localhost:5000/api/notes?lat=' + this.props.lat + '&lon=' + this.props.lon + '&text=Building entrance: ' + this.state.entranceType, 
+			{ 
+				method: 'POST',
+				})
+			.then(res => console.log(res))
+			.catch(err => console.log('Error', err));
+
+		}
 
     event.preventDefault();   
   

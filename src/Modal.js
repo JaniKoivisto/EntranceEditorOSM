@@ -1,37 +1,3 @@
-// import React, { Component } from 'react';
-
-// class Modal extends Component {
-
-//   render() {
-//   return (
-//     <div className="container">
-// 		  <button type="button" className="btn btn-primary" data-toggle="modal" data-target="#myModal">Open Modal</button>
-// 		  <div className="modal fade" id="myModal" role="dialog">
-// 		    <div className="modal-dialog">
-// 		      <div className="modal-content">
-// 		        	<div className="modal-header">
-// 		          	<button type="button" className="close" data-dismiss="modal">&times;</button>
-// 		        	</div>
-// 		        <div className="modal-body">
-// 		          <p>Do you want to log in with OSM credits?</p>
-// 		        </div>
-// 		        <div className="modal-footer">
-// 		          <button type="button" className="btn btn-primary" data-dismiss="modal">Yes</button>
-// 		          <button type="button" className="btn btn-primary" data-dismiss="modal">No</button>
-// 		        </div>
-// 		      </div>
-		      
-// 		    </div>
-// 		  </div> 
-// 		</div>
-
-//   );
-// }
-
-// };
-
-// export default Modal;
-
 import React from 'react';
 import PropTypes from 'prop-types';
 import './Modal.css';
@@ -76,7 +42,7 @@ class Modal extends React.Component {
 		          <br/>
 		          <div className="footer">
 		            <button className ="btn btn-primary" style={{margin: 10}} onClick={this.props.onClose}>Yes, log me in!</button>
-		            <button className ="btn btn-primary" style={{margin: 10}}onClick={this.props.onClose}>No, I don't have OSM account</button>
+		            <button className ="btn btn-primary" style={{margin: 10}} onClick={this.props.onClose}>No, I don't have OSM account</button>
 		          </div>
 		        </div>
 		      </div>
