@@ -1,10 +1,7 @@
 import React, { Component } from 'react';
 // import './App.css';
 import Navbar from './Navbar';
-import EntranceCoor from './EntranceCoor';
-import Form from './Form';
 import Map from './MapEmbed';
-import Login from './Login';
 import Modal from './Modal';
 
 class App extends Component {
@@ -18,6 +15,7 @@ class App extends Component {
       };
 
       this.toggleModal = this.toggleModal.bind(this);
+      this.osmLogin = this.osmLogin.bind(this);
 
   }
 
@@ -34,8 +32,16 @@ class App extends Component {
       isOpen: !this.state.isOpen,
     });
 
+
     event.preventDefault();
   };
+
+  osmLogin(event) {
+    this.setState({
+      osmUser: !this.state.osmUser,
+    });
+
+  }
 
 
 
@@ -49,10 +55,8 @@ class App extends Component {
       return (
         <div className="App">        
           <Navbar osmUser= {this.state.osmUser} lon={this.state.entranceLongitude} lat={this.state.entranceLatitude}/>
-          <EntranceCoor entranceLon = {this.state.entranceLongitude} entranceLat = {this.state.entranceLatitude}/>
           <Map updateLongitude = {this.updateLongitude} updateLatitude = {this.updateLatitude} />
-          <Modal show={this.state.isOpen} onClose={this.toggleModal}>
-          </Modal>  
+          <Modal show={this.state.isOpen} onClose={this.toggleModal} onLogin={this.osmLogin} osmUser={this.state.osmUser} /> 
         </div>
       );
   }

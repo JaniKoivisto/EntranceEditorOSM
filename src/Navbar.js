@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+
 class Navbar extends Component {
 		constructor(props) {
 		super(props)
@@ -18,12 +19,9 @@ class Navbar extends Component {
 
    handleSubmit(event) {
 
-		if(this.props.osmUser) {
-			console.log('no osm login');
-
-		} else {
-			alert(this.state.entranceType)
-
+		if(this.props.osmUser === false) {
+			alert('no osm login ' + this.state.entranceType);
+			//Note API
 			fetch('http://localhost:5000/api/notes?lat=' + this.props.lat + '&lon=' + this.props.lon + '&text=Building entrance: ' + this.state.entranceType, 
 			{ 
 				method: 'POST',
@@ -31,19 +29,27 @@ class Navbar extends Component {
 			.then(res => console.log(res))
 			.catch(err => console.log('Error', err));
 
+		} else {
+			alert('osm user ' + this.state.entranceType)
+
+
 		}
 
     event.preventDefault();   
   
   }
 
+  
+
 
 	render() {
+
 		return(
-				<div>
-					<nav className="navbar navbar-light bg-light">
-					  <form className="form-inline" onSubmit={this.handleSubmit}>
-							<div className="input-group">
+
+					<nav className="navbar navbar-light bg-light justify-content-between">
+
+					  <form className="form-inline my-2 my-lg-0" onSubmit={this.handleSubmit}>
+							<div className="input-group mr-sm-2">
 							  <select className="custom-select" id="inputGroupSelect04" value={this.state.entranceType}
 	          onChange={this.handleChange}>
 	          			<option value="choose">Choose entrance type...</option>
@@ -55,12 +61,15 @@ class Navbar extends Component {
 							    <option value="home">home</option>
 							  </select>
 							  <div className="input-group-append">
-							  	<input className="btn btn-outline-secondary" type="submit" value="Submit!" />
+							  	<input className="btn btn-outline-secondary my-2 my-sm-0" type="submit" value="Submit!" />
 							  </div>
 							</div>
 					  </form>
+
+					  <span className="navbar-text">Entrance Coordinates: {this.props.lon}, {this.props.lat}</span>
+
 					</nav>
-				</div>
+
 			);
 	}
 }
