@@ -1,54 +1,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import $ from 'jquery';
+//import $ from 'jquery';
 
 class Modal extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            username: '',
-            password: '',
-            response: false
+            
         };
 
-        this.handleChange = this.handleChange.bind(this);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        //this.handleNodeSubmit = this.handleNodeSubmit.bind(this);
     }
 
-    handleChange(event) {
-        this.setState({ [event.target.name]: event.target.value });
-    }
-
-    handleSubmit(event) {
-    	console.log('logged in')
-
-      const encodedUsername = new Buffer(this.state.username).toString('base64');
-      const encodedPassword = new Buffer(this.state.password).toString('base64');
-      $.ajax({
-          url: "http://localhost:5000/api/login",
-          type: 'GET',
-          beforeSend: function (xhr) {
-              xhr.setRequestHeader('Authorization', 'Basic ' + encodedUsername + ':' + encodedPassword);
-
-          },
-          success: function (data) {
-              var response = data;
-              console.log(response);
-          },
-          error: function () {
-              console.log("Request failed");
-          }
-      })
-
-    	//Change for successfull response
-    	this.setState({
-            response: true
-      });
-
-
-      event.preventDefault();
-    }
 
   render() {
     // Render nothing if the "show" prop is false
@@ -106,17 +68,17 @@ class Modal extends React.Component {
                 <form onSubmit={this.handleSubmit}>
                     <label>
                         Username:
-                  <input className="form-control" name="username" type="text" required value={this.state.username}
-                            onChange={this.handleChange} />
+                  <input className="form-control" name="username" type="text" required value={this.props.username}
+                            onChange={this.props.handleLoginChange} />
                     </label>
                     <br />
                     <label>
                         Password:
-                  <input className="form-control" name="password" type="password" required value={this.state.password}
-                            onChange={this.handleChange} />
+                  <input className="form-control" name="password" type="password" required value={this.props.password}
+                            onChange={this.props.handleLoginChange} />
                     </label>
                     <br />
-                    <input className="btn btn-outline-secondary" type="submit" value="Login" onClick={this.props.onClose} />
+                    <input className="btn btn-outline-secondary" type="submit" value="Login" onClick={this.props.handleLoginSubmit} />
                 </form>  
             </div>
 			        </div>

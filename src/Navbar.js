@@ -5,37 +5,39 @@ class Navbar extends Component {
 		constructor(props) {
 		super(props)
 		this.state = {
-			entranceType: '',
+			//entranceType: '',
 		};
 
-		this.handleChange = this.handleChange.bind(this);
+		//this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 	}
 
-	 handleChange(event) {
-    this.setState({ entranceType: event.target.value });
-  }
+	 // handleChange(event) {
+  //   this.setState({ entranceType: event.target.value });
+  // }
 
 
    handleSubmit(event) {
 
 		if(this.props.osmUser === false) {
-			alert('no osm login ' + this.state.entranceType);
+			alert('no osm login ' + this.props.entranceType);
 			//Note API
-			fetch('http://localhost:5000/api/notes?lat=' + this.props.lat + '&lon=' + this.props.lon + '&text=Building entrance: ' + this.state.entranceType, 
+			fetch('http://localhost:5000/api/notes?lat=' + this.props.lat + '&lon=' + this.props.lon + '&text=Building entrance: ' + this.props.entranceType, 
 			{ 
 				method: 'POST',
 				})
 			.then(res => console.log(res))
 			.catch(err => console.log('Error', err));
 
+			event.preventDefault();
+
 		} else {
-			alert('osm user ' + this.state.entranceType)
+			this.props.createNode();
+			alert('osm user ' + this.props.entranceType);
 
+    event.preventDefault();
 
-		}
-
-    event.preventDefault();   
+    }   
   
   }
 
@@ -50,8 +52,8 @@ class Navbar extends Component {
 
 					  <form className="form-inline my-2 my-lg-0" onSubmit={this.handleSubmit}>
 							<div className="input-group mr-sm-2">
-							  <select className="custom-select" id="inputGroupSelect04" value={this.state.entranceType}
-	          onChange={this.handleChange}>
+							  <select className="custom-select" id="inputGroupSelect04" value={this.props.entranceType}
+	          onChange={this.props.handleChange}>
 	          			<option value="choose">Choose entrance type...</option>
 							    <option value="main">main</option>
 							    <option value="service">service</option>
