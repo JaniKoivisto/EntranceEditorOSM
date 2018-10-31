@@ -11,7 +11,7 @@ class App extends Component {
     this.state = {
       entranceLongitude: null,
       entranceLatitude: null,
-      //isOpen: false,
+      isOpen: false,
       osmUser: false,
       username:'',
       password:'',
@@ -55,11 +55,9 @@ class App extends Component {
 
   handleLoginChange(event) {
       this.setState({ [event.target.name]: event.target.value });
-      console.log(this.state.username);
   };
 
   handleLoginSubmit(event) {
-    console.log('logged in');
 
     const encodedUsername = new Buffer(this.state.username).toString('base64');
     const encodedPassword = new Buffer(this.state.password).toString('base64');
@@ -102,14 +100,12 @@ class App extends Component {
   };
 
   createNode() {
-    // console.log('Hi, I am the node');
-    // console.log(this.state.entranceType);
     let headers = new Headers();
     headers.set('Authorization', 'Basic ' + this.state.encodedUsername + ":" + this.state.encodedPassword);
     headers.set('content-type', 'application/json');
     
     const addNode = async () => {
-        const response = await fetch('http://localhost:5000/api/node?lat=' + this.props.lat + '&lon=' + this.props.lon + '&entrance=yes'
+        const response = await fetch('http://localhost:5000/api/node?lat=' + this.state.entranceLatitude + '&lon=' + this.state.entranceLongitude + '&entrance=yes'
         ,
         { 
             method: 'POST',
