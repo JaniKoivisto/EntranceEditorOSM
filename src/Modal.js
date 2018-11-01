@@ -37,7 +37,7 @@ class Modal extends React.Component {
 	      maxWidth: 550,
 	      minHeight: 250,
 	      margin: '0 auto',
-	      padding: 30,
+	      padding: 40,
 	      zIndex: 1
 	    };
 
@@ -47,13 +47,12 @@ class Modal extends React.Component {
 	    	<div>
 		      <div className="backdrop" style={backdropStyle}>
 		        <div style={modalStyle}>
-		        	<span>Welcome to OSM Entrance Editor</span>
-		        	<br/>
+		        	<h5>Welcome to OSM Entrance Editor</h5>
 		          <p>Do you want to use your OpenStreetMap credits?</p>
 		          <br/>
 		          <div className="footer">
-		            <button className ="btn btn-outline-secondary" style={{margin: 10}} onClick={this.props.onLogin}>Yes, log me in!</button>
-		            <button className ="btn btn-outline-secondary" style={{margin: 10}} onClick={this.props.onClose}>No, I don't have OSM account</button>
+		            <button className ="btn btn-outline-secondary btn-block" onClick={this.props.onLogin}>Yes, log me in!</button>
+		            <button className ="btn btn-outline-secondary btn-block" onClick={this.props.onClose}>No, thank you</button>
 		          </div>
 		        </div>
 		      </div>

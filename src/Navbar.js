@@ -54,7 +54,7 @@ class Navbar extends Component {
 							<div className="input-group mr-sm-2">
 							  <select className="custom-select" id="inputGroupSelect04" value={this.props.entranceType}
 	          onChange={this.props.handleChange}>
-	          			<option value="choose">Choose entrance type...</option>
+	          			<option defaultValue>Choose entrance type...</option>
 							    <option value="main">main</option>
 							    <option value="service">service</option>
 							    <option value="exit">exit</option>
@@ -63,7 +63,8 @@ class Navbar extends Component {
 							    <option value="home">home</option>
 							  </select>
 							  <div className="input-group-append">
-							  	<input className="btn btn-outline-secondary my-2 my-sm-0" type="submit" value="Submit!" />
+							  	<input className="btn btn-outline-secondary" style=
+							  	{{zIndex: 0}}type="submit" value="Submit!" />
 							  </div>
 							</div>
 					  </form>
