@@ -58,11 +58,10 @@ class App extends Component {
   };
 
   handleLoginSubmit(event) {
-
     const encodedUsername = new Buffer(this.state.username).toString('base64');
     const encodedPassword = new Buffer(this.state.password).toString('base64');
     $.ajax({
-        url: "http://localhost:5000/api/login",
+        url: process.env.REACT_APP_API_URL + "/api/login",
         type: 'GET',
         beforeSend: function (xhr) {
             xhr.setRequestHeader('Authorization', 'Basic ' + encodedUsername + ':' + encodedPassword);
@@ -100,12 +99,14 @@ class App extends Component {
   };
 
   createNode() {
+    const encodedUsername = new Buffer(this.state.username).toString('base64');
+    const encodedPassword = new Buffer(this.state.password).toString('base64');
     let headers = new Headers();
-    headers.set('Authorization', 'Basic ' + this.state.encodedUsername + ":" + this.state.encodedPassword);
+    headers.set('Authorization', 'Basic ' + encodedUsername + ":" + encodedPassword);
     headers.set('content-type', 'application/json');
     
     const addNode = async () => {
-        const response = await fetch('http://localhost:5000/api/node?lat=' + this.state.entranceLatitude + '&lon=' + this.state.entranceLongitude + '&entrance=yes'
+        const response = await fetch(process.env.REACT_APP_API_URL + '/api/node?lat=' + this.state.entranceLatitude + '&lon=' + this.state.entranceLongitude + '&entrance=' + this.state.entranceType
         ,
         { 
             method: 'POST',
