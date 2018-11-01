@@ -58,11 +58,10 @@ class App extends Component {
   };
 
   handleLoginSubmit(event) {
-
     const encodedUsername = new Buffer(this.state.username).toString('base64');
     const encodedPassword = new Buffer(this.state.password).toString('base64');
     $.ajax({
-        url: "http://localhost:5000/api/login",
+        url: process.env.REACT_APP_API_URL + "/api/login",
         type: 'GET',
         beforeSend: function (xhr) {
             xhr.setRequestHeader('Authorization', 'Basic ' + encodedUsername + ':' + encodedPassword);
@@ -107,7 +106,7 @@ class App extends Component {
     headers.set('content-type', 'application/json');
     
     const addNode = async () => {
-        const response = await fetch('http://localhost:5000/api/node?lat=' + this.state.entranceLatitude + '&lon=' + this.state.entranceLongitude + '&entrance=' + this.state.entranceType
+        const response = await fetch(process.env.REACT_APP_API_URL + '/api/node?lat=' + this.state.entranceLatitude + '&lon=' + this.state.entranceLongitude + '&entrance=' + this.state.entranceType
         ,
         { 
             method: 'POST',
