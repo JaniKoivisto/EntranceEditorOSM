@@ -1,6 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
-//import $ from 'jquery';
 
 class Modal extends React.Component {
     constructor(props) {
@@ -31,7 +29,6 @@ class Modal extends React.Component {
 
 	    // The modal "window"
 	    const modalStyle = {
-	    	//position: 'relative',
 	      backgroundColor: 'rgb(248,249,250)',
 	      borderRadius: 5,
 	      maxWidth: 550,
@@ -39,6 +36,12 @@ class Modal extends React.Component {
 	      margin: '0 auto',
 	      padding: 40,
 	      zIndex: 1
+	    };
+
+	    const flexStyle ={
+			  display: 'flex',
+			  justifyContent: 'space-evenly',
+			  alignItems: 'center'
 	    };
 
 	    if(this.props.osmUser === false) {
@@ -77,7 +80,10 @@ class Modal extends React.Component {
                             onChange={this.props.handleLoginChange} />
                     </label>
                     <br />
-                    <input className="btn btn-outline-secondary" type="submit" value="Login" onClick={this.props.handleLoginSubmit} />
+                    <div style={flexStyle}>
+	                    <input className="btn btn-outline-secondary" type="submit" value="Login" onClick={this.props.handleLoginSubmit} />
+	                    <a href="#" className="card-link" onClick={this.props.onLogin}>Go Back</a>
+                    </div>
                 </form>  
             </div>
 			        </div>
@@ -92,16 +98,6 @@ class Modal extends React.Component {
 
   }
 }
-
-
-
-
-
-// Modal.propTypes = {
-//   onClose: PropTypes.func.isRequired,
-//   show: PropTypes.bool,
-//   children: PropTypes.node
-// };
 
 
 export default Modal;

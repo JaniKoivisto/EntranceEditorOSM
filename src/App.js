@@ -9,8 +9,8 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      entranceLongitude: null,
-      entranceLatitude: null,
+      entranceLongitude: new Number(),
+      entranceLatitude: new Number(),
       isOpen: false,
       osmUser: false,
       username:'',
