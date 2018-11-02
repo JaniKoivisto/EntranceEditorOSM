@@ -70,6 +70,12 @@ class App extends Component {
         success: function (data) {
             var response = data;
             console.log(response);
+            if (response.code == 200) {
+              this.setState({
+                isOpen: !this.state.isOpen,
+              });
+
+            }
         },
         error: function () {
             console.log("Request failed");
@@ -81,9 +87,7 @@ class App extends Component {
           response: true,
     });
 
-   this.setState({
-      isOpen: !this.state.isOpen,
-    });
+
 
     event.preventDefault();
 
