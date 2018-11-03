@@ -58,41 +58,41 @@ class App extends Component {
   };
 
   handleLoginSubmit(event) {
+    console.log("login");
     const encodedUsername = new Buffer(this.state.username).toString('base64');
     const encodedPassword = new Buffer(this.state.password).toString('base64');
-    $.ajax({
-        url: process.env.REACT_APP_API_URL + "/api/login",
-        type: 'GET',
-        beforeSend: function (xhr) {
-            xhr.setRequestHeader('Authorization', 'Basic ' + encodedUsername + ':' + encodedPassword);
+    let headers = new Headers();
+    headers.set('Authorization', 'Basic ' + encodedUsername + ":" + encodedPassword);
+    const login = async () => {
+      const response = await fetch(process.env.REACT_APP_API_URL + "/api/login"
+      ,
+      { 
+          method: 'GET',
+          headers: headers
+      });
 
-        },
-        success: function (data) {
-            var response = data;
-            console.log(response);
-            if (response.code == 200) {
-              this.setState({
-                isOpen: !this.state.isOpen,
-              });
+      const json = await response.json();
+      const code = json.code;
 
-            }
-        },
-        error: function () {
-            console.log("Request failed");
-        }
-    })
+      if (code === 200) {
+        this.setState({
+          isOpen: !this.state.isOpen,
+        });
 
+      }
+
+    };
+
+    login();
+    
     //Change for successfull response
     this.setState({
           response: true,
     });
 
-
-
     event.preventDefault();
 
   };
-
 
   updateLongitude = (entranceLongitude) => {this.setState({ entranceLongitude })};
 

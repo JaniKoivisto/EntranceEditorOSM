@@ -20,9 +20,9 @@ class Navbar extends Component {
    handleSubmit(event) {
 
 		if(this.props.osmUser === false) {
-			alert('no osm login ' + this.props.entranceType);
+			//alert('no osm login ' + this.props.entranceType);
 			//Note API
-			fetch('http://localhost:5000/api/notes?lat=' + this.props.lat + '&lon=' + this.props.lon + '&text=Building entrance: ' + this.props.entranceType, 
+			fetch(process.env.REACT_APP_API_URL + '/api/notes?lat=' + this.props.lat + '&lon=' + this.props.lon + '&text=Building entrance: ' + this.props.entranceType, 
 			{ 
 				method: 'POST',
 				})
@@ -33,7 +33,7 @@ class Navbar extends Component {
 
 		} else {
 			this.props.createNode();
-			alert('osm user ' + this.props.entranceType);
+			//alert('osm user ' + this.props.entranceType);
 
     event.preventDefault();
 
