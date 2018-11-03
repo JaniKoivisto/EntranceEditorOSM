@@ -18,32 +18,33 @@ class Form extends Component {
   }
 
   handleSubmit(event) {
-    	//POST call
 
-    	fetch('http://localhost:5000/api/notes?lat=' + this.props.entranceLat + '&lon=' + this.props.entranceLon + '&text=' + this.state.userText, 
+    	//POST call
+    	fetch('https://api.openstreetmap.org/api/0.6/notes?lat=' + this.props.entranceLat + '&lon=' + this.props.entranceLon + '&text=' + this.state.userText, 
 			{ 
 				method: 'POST',
 				})
-			.then(res => console.log(res))
+			.then(res => alert("Your note has been sent") )
 			.catch(err => console.log('Error', err));
 
-			this.setState({ userText: '' });
+		this.setState({ userText: '' });
 
-    event.preventDefault();
+    event.preventDefault();   
+  
   }
 
 
 	render() {
 		return(	
-				<div>
+				<div className="form">
 				<form onSubmit={this.handleSubmit}>
 	        <label>
 	          Comment:
 	          <textarea className="form-control" name="userText" type="text" value={this.state.userText}
-	          onChange={this.handleChange}/>
+	          onChange={this.handleChange} placeholder="e.g. Building's address"/>
 	        </label>
 	        <br />
-	        <input className="btn btn-primary" type="submit" value="Submit" />
+	        <input className="btn btn-primary" type="submit" value="Submit note" />
       </form>
       </div>
 			);

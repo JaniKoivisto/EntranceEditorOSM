@@ -11,116 +11,112 @@ import Point from 'ol/geom/Point';
 import Feature from 'ol/Feature';
 import {Icon, Style} from 'ol/style.js';
 import icon from './pin.png';
+import { getCenter } from 'ol/extent';
 
 class MapEmbed extends React.Component {
 	constructor() {
 		super();
 		this.state = {
-	    map: null,
-	    entranceSource: null,
-	    entranceLayer: null,
+			map: null,
+			entranceSource: null,
+			entranceLayer: null,
+			entranceMarker: null
 		};
 	}
-
-
+	
+	
 	componentDidMount() {
-
-		var entranceSource = new VectorSource({});
+		var entranceMarker = new Feature({
+			geometry: new Point(fromLonLat([24.94, 60.17]))
+		});
+		
+		var iconStyle = new Style({
+			image: new Icon( ({
+				anchor: [0.5, 16],
+				anchorXUnits: 'fraction',
+				anchorYUnits: 'pixels',
+				src: icon//openlayers.org/en/v3.8.2/examples/data/icon.png'
+			}))
+		});
+		
+		entranceMarker.setStyle(iconStyle);
+		
+		var entranceSource = new VectorSource({
+			features: [entranceMarker]
+		});
+		
 		var entranceLayer = new VectorLayer({
-		  source: entranceSource
-
+			updateWhileInteracting: true,
+			source: entranceSource
 		});
 		
 		var scaleLineControl = new ScaleLine();
-
+		
+		
 		const map = new Map({
-		  target: this.refs.mapContainer,
-		  layers: [
-		    new TileLayer({
-		      source: new OSM()
-		    }),
-		    entranceLayer
-		  ],
-
+			target: this.refs.mapContainer,
+			layers: [
+				new TileLayer({
+					source: new OSM()
+				}),
+				entranceLayer
+			],
+			
 			controls: defaultControls({
-			    attributionOptions: ({
-			      collapsible: true
-			    })
-			  }).extend([
-			    scaleLineControl
-			  ]),
-
-		  view: new View({
-		    center: fromLonLat([24.94, 60.17]),
-		    zoom: 6
-		  })
+				attributionOptions: ({
+					collapsible: true
+				})
+			}).extend([
+				scaleLineControl
+			]),
+			
+			view: new View({
+				center: fromLonLat([24.94, 60.17]),//user's position here
+				zoom: 6
+			})
 		});
-
-//onClick function
-
-	map.on('click', this.handleMapClick.bind(this));
-
-	    // save map and layer references to local state
-	    this.setState({ 
-	      map: map,
-	      entranceSource: entranceSource,
-	      entranceLayer: entranceLayer,
-	    });
-
- //end of didMount
+		
+		this.setState({ 
+			map: map,
+			entranceSource: entranceSource,
+			entranceLayer: entranceLayer,
+			entranceMarker: entranceMarker
+		});
+		
+		//detect center change
+		map.on('pointerdrag', this.handleMapPan.bind(this));
+		map.on('postrender', this.handleMapPan.bind(this));
+		
+		//end of didMount
+	}
+	
+	
+	handleMapPan(coordinate) {
+		
+		//var extent = this.state.map.getView().calculateExtent(this.state.map.getSize());
+		var entranceCoordinates = this.state.map.getView().getCenter();
+		//console.log(entranceCoordinates);
+		this.state.entranceMarker.getGeometry().setCoordinates(entranceCoordinates);
+		
+		
+		// derive map coordinate (references map from Wrapper Component state)
+		var lon = toLonLat(entranceCoordinates)[0];
+		this.props.updateLongitude(lon);
+		
+		var lat = toLonLat(entranceCoordinates)[1];
+		this.props.updateLatitude(lat);
+		
+	}
+	
+	
+	render () {
+		return (
+			<div ref="mapContainer" style={{width: '100%', height: '100%', position:'fixed'}}></div>
+			);
+		}
 
 	}
-
-	// pass new features from props into the OpenLayers layer object
-  // componentDidUpdate(prevProps, prevState) {
-  //   this.state.entranceLayer.setSource(
-  //     new VectorSource({
-  //       features: this.props.routes
-  //     })
-  //   );
-  // }
-
-  handleMapClick(event) {
-
-// derive map coordinate (references map from Wrapper Component state)
-    var clickedCoordinate = this.state.map.getCoordinateFromPixel(event.pixel);
-
-		var lon = toLonLat(clickedCoordinate)[0];
-		this.props.updateLongitude(lon);
-
-		var lat = toLonLat(clickedCoordinate)[1];
-		this.props.updateLatitude(lat);
-	    // create Point geometry from clicked coordinate
-    //var clickedPointGeom = new Point( this.state.coordinates );
-
-	var newEntranceFeature = new Feature({
-    geometry: new Point( clickedCoordinate ),
-  });
-
-  var iconStyle = new Style({
-    	image: new Icon( ({
-      anchor: [0.5, 32],
-      anchorXUnits: 'fraction',
-      anchorYUnits: 'pixels',
-      src: icon//openlayers.org/en/v3.8.2/examples/data/icon.png'
-    	}))
-  	});
-
-  	newEntranceFeature.setStyle(iconStyle);
-
-	this.state.entranceSource.addFeature(newEntranceFeature);
-
-  }
-
-
-	render () {
-	    return (
-	      <div ref="mapContainer"> </div>
-	    );
-	  }
-
-}
-
-
-
-export default MapEmbed;
+	
+	
+	
+	export default MapEmbed;
