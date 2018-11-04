@@ -72,7 +72,7 @@ class MapEmbed extends React.Component {
 			
 			view: new View({
 				center: fromLonLat([24.94, 60.17]),//user's position here
-				zoom: 6
+				zoom: 12
 			})
 		});
 		
