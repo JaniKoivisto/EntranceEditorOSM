@@ -32,7 +32,7 @@ class MapEmbed extends React.Component {
 		
 		var iconStyle = new Style({
 			image: new Icon( ({
-				anchor: [0.5, 16],
+				anchor: [0.5, 32],
 				anchorXUnits: 'fraction',
 				anchorYUnits: 'pixels',
 				src: icon//openlayers.org/en/v3.8.2/examples/data/icon.png'
