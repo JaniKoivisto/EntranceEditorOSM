@@ -12,6 +12,7 @@ import Feature from 'ol/Feature';
 import {Icon, Style} from 'ol/style.js';
 import icon from './pin.png';
 import { getCenter } from 'ol/extent';
+import Geolocation from 'ol/Geolocation.js';
 
 class MapEmbed extends React.Component {
 	constructor() {
@@ -20,7 +21,8 @@ class MapEmbed extends React.Component {
 			map: null,
 			entranceSource: null,
 			entranceLayer: null,
-			entranceMarker: null
+			entranceMarker: null,
+			geolocation: null
 		};
 	}
 	
@@ -72,20 +74,33 @@ class MapEmbed extends React.Component {
 			
 			view: new View({
 				center: fromLonLat([24.94, 60.17]),//user's position here
-				zoom: 6
+				zoom: 18
 			})
 		});
+
+	  var geolocation = new Geolocation({
+      // enableHighAccuracy must be set to true to have the heading value.
+      trackingOptions: {
+        enableHighAccuracy: true
+      },
+      projection: map.getView().getProjection()
+    });
+
+    geolocation.setTracking(true);
 		
 		this.setState({ 
 			map: map,
 			entranceSource: entranceSource,
 			entranceLayer: entranceLayer,
-			entranceMarker: entranceMarker
+			entranceMarker: entranceMarker,
+			geolocation: geolocation
 		});
 		
 		//detect center change
 		map.on('pointerdrag', this.handleMapPan.bind(this));
 		map.on('postrender', this.handleMapPan.bind(this));
+
+		geolocation.on('change:position', this.handleGeolocation.bind(this));
 		
 		//end of didMount
 	}
@@ -106,6 +121,17 @@ class MapEmbed extends React.Component {
 		var lat = toLonLat(entranceCoordinates)[1];
 		this.props.updateLatitude(lat);
 		
+	}
+
+	handleGeolocation(geolocation) {
+		var userPosition = this.state.geolocation.getPosition()
+
+		// var newUserPosition = new Feature({
+	 //    geometry: new Point( userPosition ),
+	 //  });
+
+		//this.state.entranceSource.addFeature(newUserPosition);
+		this.state.map.getView().setCenter(userPosition);
 	}
 	
 	
