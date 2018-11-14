@@ -125,7 +125,8 @@ class MapEmbed extends React.Component {
 
 	handleGeolocation(geolocation) {
 		var userPosition = this.state.geolocation.getPosition()
-
+		// disable tracking option after initial load
+		this.state.geolocation.setTracking(false);
 		// var newUserPosition = new Feature({
 	 //    geometry: new Point( userPosition ),
 	 //  });
