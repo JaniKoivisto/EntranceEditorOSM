@@ -7,3 +7,10 @@ services:
       dockerfile: ./src/Dockerfile.prod
     ports:
      - "3000:80"
+  back-end:
+    container_name: entrance_editor_backend
+    build:
+      context: .
+      dockerfile: ./backend/Dockerfile.prod
+    ports:
+      - "5000:5000"
