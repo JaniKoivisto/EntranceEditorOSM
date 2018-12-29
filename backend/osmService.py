@@ -3,6 +3,9 @@ import xml.etree.cElementTree as ET
 import requests
 import xmltodict
 import json
+import overpass
+
+api = overpass.API()
 
 def makeNode(changeset_id, lon, lat, entrance_attributes, entrance_address_attributes):
     osm = ET.Element("osm")
@@ -48,3 +51,13 @@ def addChangeset(username , password):
 def getNode(id):
     response = requests.get('https://api.openstreetmap.org/api/0.6/node/{0}'.format(id))
     return json.dumps(xmltodict.parse(response.text))
+    
+def getData(x, y, xx, yy):
+    response = api.get( '(' + 
+                        'node["building"](' + x + ',' + y + ',' + xx + ',' + yy +');' + 
+                        'way["building"](' + x + ',' + y + ',' + xx + ',' + yy +');' + 
+                        'relation["building"](' + x + ',' + y + ',' + xx + ',' + yy +');)' + 
+                        ';out;>;out skel;'
+                        , responseformat="xml")
+    return response
+    
