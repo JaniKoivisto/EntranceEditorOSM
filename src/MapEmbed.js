@@ -101,33 +101,13 @@ class MapEmbed extends React.Component {
 			]),
 			
 			view: new View({
-				center: fromLonLat([24.94, 60.17]),//user's position here
-				zoom: 18
+				center: fromLonLat([24.94, 60.17]),
+				zoom: 18,
+				minZoom: 17
 			})
 		});
-		
-		var EntranceDraw = {
-			init: function() {
-				map.addInteraction(this.Point);
-				this.Point.setActive(true);
-			},
-			Point: new Draw({
-				source: buildingSource,
-				type: 'Point',
-				//style: this.state.iconStyle
-			})
-		};
-
-		EntranceDraw.init();
-
-		var EntranceSnap = new Snap({
-			source: buildings.getSource()
-		});
-
-		map.addInteraction(EntranceSnap);
 
 		var geolocation = new Geolocation({
-			// enableHighAccuracy must be set to true to have the heading value.
 			trackingOptions: {
 				enableHighAccuracy: true
 			},
@@ -167,7 +147,7 @@ class MapEmbed extends React.Component {
 	
 	handleGeolocation(geolocation) {
 		var userPosition = this.state.geolocation.getPosition()
-		// disable tracking option after initial load
+		// Disable tracking option after initial load
 		this.state.geolocation.setTracking(false);
 		this.state.map.getView().setCenter(userPosition);
 	}
@@ -177,7 +157,6 @@ class MapEmbed extends React.Component {
 			<div ref="mapContainer" style={{width: '100%', height: '100%', position:'fixed'}}></div>
 			);
 		}
-		
 	}
 	
 	export default MapEmbed;
