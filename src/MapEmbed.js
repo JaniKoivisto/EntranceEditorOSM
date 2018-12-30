@@ -15,7 +15,6 @@ import icon from './pin.png';
 import Geolocation from 'ol/Geolocation.js';
 import {transformExtent} from 'ol/proj.js';
 import {bbox as bboxStrategy} from 'ol/loadingstrategy.js';
-import {Draw, Snap} from 'ol/interaction.js';
 
 class MapEmbed extends React.Component {
 	constructor() {
@@ -133,9 +132,9 @@ class MapEmbed extends React.Component {
 
 	}
 	
-	
 	handleMapPan(coordinate) {
-		var entranceCoordinates = this.state.map.getView().getCenter();
+		var centerPoint = this.state.map.getView().getCenter();
+		var entranceCoordinates = centerPoint
 		this.state.entranceMarker.getGeometry().setCoordinates(entranceCoordinates);
 
 		var lon = toLonLat(entranceCoordinates)[0];
@@ -143,6 +142,12 @@ class MapEmbed extends React.Component {
 		
 		var lat = toLonLat(entranceCoordinates)[1];
 		this.props.updateLatitude(lat);
+
+		var closest = this.state.buildingSource.getFeaturesAtCoordinate(centerPoint);
+		if (closest[0]) {
+			var snapTo = closest[0].getGeometry().getClosestPoint(centerPoint);
+			this.state.map.getView().setCenter(snapTo);
+		}
 	}
 	
 	handleGeolocation(geolocation) {
