@@ -66,5 +66,14 @@ def getNode():
     response = service.getNode(nodeId)
     return response
 
+@app.route("/api/osmData", methods=['GET'])
+def getOsmData():
+    x = request.args.get('x')
+    xx = request.args.get('xx')
+    y = request.args.get('y')
+    yy = request.args.get('yy')
+    response = service.getData(x, y, xx, yy)
+    return response
+
 if __name__ == "__main__":
     app.run(debug=True)
