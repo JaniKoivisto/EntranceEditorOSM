@@ -1,10 +1,24 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify, url_for
+from flask_oauthlib.client import OAuth
+from flask_cors import CORS
 import osmService as service
 import utils
-from flask_cors import CORS
 
 app = Flask(__name__)
 cors = CORS(app)
+app.secret_key = 'development'
+oauth = OAuth(app)
+
+osm_oauth = oauth.remote_app(
+    'api/osm_oauth',
+    __name__,
+    consumer_key='MTu9yV76H1nIeGNHHNmaF47hLrMptWGFJYmW5FmY',
+    consumer_secret='doNKPR6ilm8K0o49rwA8eCPEvcgtaPVDnXxxT9ol',
+    base_url="https://www.openstreetmap.org",
+    access_token_url='https://www.openstreetmap.org/oauth/access_token',
+    authorize_url='https://www.openstreetmap.org/oauth/authorize',
+    access_token_method='GET'
+)
 
 @app.route("/api/notes", methods=['POST'])
 def addNote():
@@ -15,7 +29,7 @@ def addNote():
     response = service.addNote(params)
     return response
 
-@app.route("/api/login", methods=['GET', 'OPTIONS'])
+@app.route("/api/login2.0", methods=['GET', 'OPTIONS'])
 def loginOSM():
     decoded_username = ''
     decoded_password = ''
@@ -74,6 +88,23 @@ def getOsmData():
     yy = request.args.get('yy')
     response = service.getData(x, y, xx, yy)
     return response
+
+@app.route("/api/login", methods=['GET'])
+def loginOAUTH():
+    return osm_oauth.authorize(callback=url_for('authorized',
+        next=request.args.get('next') or request.referrer or None))
+
+@app.route('/api/login/authorized')
+@osm_oauth.authorized_handler
+def authorized(response):
+    print(response)
+    
+    '''
+    session['osm_token'] = (
+        response['oauth_token'],
+        response['oauth_token_secret']
+    )
+    '''
 
 if __name__ == "__main__":
     app.run(debug=True)

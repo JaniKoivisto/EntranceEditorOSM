@@ -10,15 +10,12 @@ class App extends Component {
       entranceLongitude: new Number(),
       entranceLatitude: new Number(),
       isOpen: false,
-      osmUser: false,
       username:'',
       password:'',
-      response: false,
       entranceType: ''
     };
     
     this.toggleModal = this.toggleModal.bind(this);
-    this.osmLogin = this.osmLogin.bind(this);
     this.handleLoginChange = this.handleLoginChange.bind(this);
     this.handleLoginSubmit = this.handleLoginSubmit.bind(this);
     this.createNode = this.createNode.bind(this);
@@ -38,48 +35,25 @@ class App extends Component {
     event.preventDefault();
   };
   
-  osmLogin(event) {
-    this.setState({
-      osmUser: !this.state.osmUser,
-    });
-    
-  };
-  
   handleLoginChange(event) {
     this.setState({ [event.target.name]: event.target.value });
   };
   
   handleLoginSubmit(event) {
-    const encodedUsername = new Buffer(this.state.username).toString('base64');
-    const encodedPassword = new Buffer(this.state.password).toString('base64');
     let headers = new Headers();
-    headers.set('Authorization', 'Basic ' + encodedUsername + ":" + encodedPassword);
-    const login = async () => {
-      const response = await fetch(process.env.REACT_APP_API_URL + "/api/login"
-      ,
-      { 
-        method: 'GET',
-        headers: headers
-      });
-      
-      const json = await response.json();
-      const code = json.code;
-      
-      if (code === 200) {
-        this.setState({
-          isOpen: !this.state.isOpen,
-        });
-        
-      }
-      
-    };
+    headers.set('Access-Control-Allow-Origin', '*');
+    headers.set('Allow', '*');
+    headers.set('Origin', '*');
     
-    login();
-    
-    this.setState({
-      response: true,
-    });
-    
+    fetch(process.env.REACT_APP_API_URL + "/api/login"
+    ,
+    { 
+      method: 'GET',
+      headers: headers,
+    }).then(response => {
+      if (response) window.location.href = response.url;
+    })
+
     event.preventDefault();
     
   };
@@ -124,7 +98,7 @@ class App extends Component {
       <div className="App">        
       <Navbar osmUser= {this.state.osmUser} lon={this.state.entranceLongitude} lat={this.state.entranceLatitude} createNode={this.createNode} handleChange={this.handleEntranceChange} entranceType={this.state.entranceType} />
       <Map updateLongitude = {this.updateLongitude} updateLatitude = {this.updateLatitude} />
-      <Modal show={this.state.isOpen} onClose={this.toggleModal} onLogin={this.osmLogin} osmUser={this.state.osmUser} username={this.state.username} password={this.state.password} handleLoginChange={this.handleLoginChange} handleLoginSubmit={this.handleLoginSubmit} /> 
+      <Modal show={this.state.isOpen} onClose={this.toggleModal} username={this.state.username} password={this.state.password} handleLoginChange={this.handleLoginChange} handleLoginSubmit={this.handleLoginSubmit} /> 
       </div>
       );
     }
