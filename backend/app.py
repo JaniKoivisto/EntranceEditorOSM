@@ -1,5 +1,5 @@
-from flask import Flask, request, jsonify, url_for
-from flask_oauthlib.client import OAuth
+from flask import Flask, request, jsonify, url_for, redirect, session
+from requests_oauthlib import OAuth1Session, OAuth1
 from flask_cors import CORS
 import osmService as service
 import utils
@@ -7,18 +7,12 @@ import utils
 app = Flask(__name__)
 cors = CORS(app)
 app.secret_key = 'development'
-oauth = OAuth(app)
 
-osm_oauth = oauth.remote_app(
-    'api/osm_oauth',
-    __name__,
-    consumer_key='MTu9yV76H1nIeGNHHNmaF47hLrMptWGFJYmW5FmY',
-    consumer_secret='doNKPR6ilm8K0o49rwA8eCPEvcgtaPVDnXxxT9ol',
-    base_url="https://www.openstreetmap.org",
-    access_token_url='https://www.openstreetmap.org/oauth/access_token',
-    authorize_url='https://www.openstreetmap.org/oauth/authorize',
-    access_token_method='GET'
-)
+client_id = 'MTu9yV76H1nIeGNHHNmaF47hLrMptWGFJYmW5FmY'
+client_secret = "doNKPR6ilm8K0o49rwA8eCPEvcgtaPVDnXxxT9ol"
+authorization_url = 'https://www.openstreetmap.org/oauth/authorize'
+token_url = 'https://www.openstreetmap.org/oauth/access_token'
+request_token_url = ' https://www.openstreetmap.org/oauth/request_token'
 
 @app.route("/api/notes", methods=['POST'])
 def addNote():
@@ -91,20 +85,23 @@ def getOsmData():
 
 @app.route("/api/login", methods=['GET'])
 def loginOAUTH():
-    return osm_oauth.authorize(callback=url_for('authorized',
-        next=request.args.get('next') or request.referrer or None))
+    oauth = OAuth1Session(client_id, client_secret=client_secret)
+    fetch_response = oauth.fetch_request_token(request_token_url)
+    oauth_token = fetch_response.get('oauth_token')
+    oauth_token_secret = fetch_response.get('oauth_token_secret')
 
-@app.route('/api/login/authorized')
-@osm_oauth.authorized_handler
-def authorized(response):
-    print(response)
-    
-    '''
-    session['osm_token'] = (
-        response['oauth_token'],
-        response['oauth_token_secret']
-    )
-    '''
+    return jsonify({"oauthtoken" : oauth_token})
+
+@app.route('/api/login/callback', methods=['GET'])
+def authorized():
+    verifier = request.args.get('oauth_verifier')
+    print(verifier)
+    oauth = OAuth1(client_id,
+                   client_secret=client_secret,
+                   resource_owner_key=oauth_token,
+                   resource_owner_secret=oauth_token_secret,
+                   verifier=verifier)
+    return ""
 
 if __name__ == "__main__":
     app.run(debug=True)

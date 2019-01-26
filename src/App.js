@@ -45,14 +45,20 @@ class App extends Component {
     headers.set('Allow', '*');
     headers.set('Origin', '*');
     
-    fetch(process.env.REACT_APP_API_URL + "/api/login"
-    ,
-    { 
-      method: 'GET',
-      headers: headers,
-    }).then(response => {
-      if (response) window.location.href = response.url;
-    })
+    const login = async () => {
+      const response = await fetch(process.env.REACT_APP_API_URL + "/api/login"
+      ,
+      { 
+        method: 'GET',
+        headers: headers
+      });
+      
+      const data = await response.json();
+      var url = 'https://www.openstreetmap.org/oauth/authorize?oauth_token=' + data.oauthtoken
+      window.location.href = url
+    };
+    
+    login();
 
     event.preventDefault();
     
