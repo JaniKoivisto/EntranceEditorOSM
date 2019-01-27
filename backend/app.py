@@ -13,6 +13,7 @@ client_secret = "doNKPR6ilm8K0o49rwA8eCPEvcgtaPVDnXxxT9ol"
 authorization_url = 'https://www.openstreetmap.org/oauth/authorize'
 token_url = 'https://www.openstreetmap.org/oauth/access_token'
 request_token_url = ' https://www.openstreetmap.org/oauth/request_token'
+callback_url = 'https://gis-e601001.aalto.fi/api/login/callback'
 
 @app.route("/api/notes", methods=['POST'])
 def addNote():
@@ -85,12 +86,12 @@ def getOsmData():
 
 @app.route("/api/login", methods=['GET'])
 def loginOAUTH():
-    oauth = OAuth1Session(client_id, client_secret=client_secret)
+    oauth = OAuth1Session(client_id, client_secret=client_secret, callback_uri = callback_url)
     fetch_response = oauth.fetch_request_token(request_token_url)
-    oauth_token = fetch_response.get('oauth_token')
-    oauth_token_secret = fetch_response.get('oauth_token_secret')
+    session['oauth_token'] = fetch_response.get('oauth_token')
+    session['oauth_token_secret'] = fetch_response.get('oauth_token_secret')
 
-    return jsonify({"oauthtoken" : oauth_token})
+    return jsonify({"oauthtoken" : session['oauth_token']})
 
 @app.route('/api/login/callback', methods=['GET'])
 def authorized():
@@ -98,10 +99,12 @@ def authorized():
     print(verifier)
     oauth = OAuth1(client_id,
                    client_secret=client_secret,
-                   resource_owner_key=oauth_token,
-                   resource_owner_secret=oauth_token_secret,
+                   resource_owner_key=session['oauth_token'],
+                   resource_owner_secret=session['oauth_token_secret'],
                    verifier=verifier)
-    return ""
+    oauth.fetch_access_token(token_url)
+    response = service.loginOSM(oauth)
+    return response
 
 if __name__ == "__main__":
     app.run(debug=True)
