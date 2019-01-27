@@ -1,4 +1,5 @@
 from flask import Flask, request, jsonify, url_for, redirect, session
+from flask_session import Session
 from requests_oauthlib import OAuth1Session, OAuth1
 from flask_cors import CORS
 import osmService as service
@@ -6,7 +7,8 @@ import utils
 
 app = Flask(__name__)
 cors = CORS(app)
-app.secret_key = 'development'
+app.config.from_object('config.ProductionConfig')
+Session(app)
 
 client_id = 'MTu9yV76H1nIeGNHHNmaF47hLrMptWGFJYmW5FmY'
 client_secret = "doNKPR6ilm8K0o49rwA8eCPEvcgtaPVDnXxxT9ol"
@@ -90,17 +92,15 @@ def loginOAUTH():
     fetch_response = oauth.fetch_request_token(request_token_url)
     session['oauth_token'] = fetch_response.get('oauth_token')
     session['oauth_token_secret'] = fetch_response.get('oauth_token_secret')
-
-    return jsonify({"oauthtoken" : session['oauth_token']})
+    return jsonify({"oauthtoken" : session.get('oauth_token')})
 
 @app.route('/api/login/callback', methods=['GET'])
 def authorized():
     verifier = request.args.get('oauth_verifier')
-    print(verifier)
-    oauth = OAuth1(client_id,
+    oauth = OAuth1Session(client_id,
                    client_secret=client_secret,
-                   resource_owner_key=session['oauth_token'],
-                   resource_owner_secret=session['oauth_token_secret'],
+                   resource_owner_key=session.get('oauth_token'),
+                   resource_owner_secret=session.get('oauth_token_secret'),
                    verifier=verifier)
     oauth.fetch_access_token(token_url)
     response = service.loginOSM(oauth)
