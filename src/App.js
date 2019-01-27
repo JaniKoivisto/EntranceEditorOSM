@@ -55,7 +55,7 @@ class App extends Component {
       
       const data = await response.json();
       var url = 'https://www.openstreetmap.org/oauth/authorize?oauth_token=' + data.oauthtoken
-      window.location.href = url
+      window.location.assign(url);
     };
     
     login();

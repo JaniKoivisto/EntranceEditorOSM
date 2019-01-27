@@ -1,5 +1,4 @@
 from flask import Flask, request, jsonify, url_for, redirect, session
-from flask_session import Session
 from requests_oauthlib import OAuth1Session, OAuth1
 from flask_cors import CORS
 import osmService as service
@@ -7,8 +6,7 @@ import utils
 
 app = Flask(__name__)
 cors = CORS(app)
-app.config.from_object('config.ProductionConfig')
-Session(app)
+app.secret_key = 'development'
 
 client_id = 'MTu9yV76H1nIeGNHHNmaF47hLrMptWGFJYmW5FmY'
 client_secret = "doNKPR6ilm8K0o49rwA8eCPEvcgtaPVDnXxxT9ol"
@@ -17,6 +15,10 @@ token_url = 'https://www.openstreetmap.org/oauth/access_token'
 request_token_url = ' https://www.openstreetmap.org/oauth/request_token'
 callback_url = 'https://gis-e601001.aalto.fi/api/login/callback'
 
+@app.before_request
+def make_session_permanent():
+    session.permanent = True
+
 @app.route("/api/notes", methods=['POST'])
 def addNote():
     lon = request.args.get('lon')
@@ -24,15 +26,6 @@ def addNote():
     text = request.args.get('text')
     params = {'text':text, 'lon':lon, 'lat':lat}
     response = service.addNote(params)
-    return response
-
-@app.route("/api/login2.0", methods=['GET', 'OPTIONS'])
-def loginOSM():
-    decoded_username = ''
-    decoded_password = ''
-    if request.headers.get('Authorization'):
-        decoded_username, decoded_password = utils.authDecoder(request)
-    response = service.loginOSM(decoded_username, decoded_password)
     return response
 
 @app.route("/api/node", methods=['POST', 'OPTIONS'])
