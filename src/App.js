@@ -50,7 +50,8 @@ class App extends Component {
       ,
       { 
         method: 'GET',
-        headers: headers
+        headers: headers,
+        redirect: 'follow'
       });
       
       const data = await response.json();
