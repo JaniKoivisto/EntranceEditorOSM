@@ -1,20 +1,26 @@
 import React, { Component } from 'react';
-import Navbar from './Navbar';
 import Map from './MapEmbed';
-import Modal from './Modal';
+import LoginForm from './LoginForm.js';
+import Sidenav from './sidenav/Sidenav.js';
+import { Modal } from 'react-materialize';
 
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      entranceLongitude: new Number(),
-      entranceLatitude: new Number(),
+      entranceLongitude: 0,
+      entranceLatitude: 0,
       isOpen: false,
       osmUser: false,
       username:'',
       password:'',
       response: false,
-      entranceType: ''
+      modalOpen: true,
+      entranceType: 'yes',
+      Number: '',
+      Street: '',
+      Code: '',
+      City: '',
     };
     
     this.toggleModal = this.toggleModal.bind(this);
@@ -91,6 +97,10 @@ class App extends Component {
   handleEntranceChange(event) {
     this.setState({ entranceType: event.target.value });
   };
+
+  handleAddressChange = (event) => {
+    this.setState({[event.target.name]: event.target.value})
+  };
   
   createNode() {
     const encodedUsername = new Buffer(this.state.username).toString('base64');
@@ -118,13 +128,59 @@ class App extends Component {
     addNode();
     
   };
+
+
+      //   <Mod 
+      //   show={this.state.isOpen} 
+      //   onClose={this.toggleModal} 
+      //   onLogin={this.osmLogin} 
+      //   osmUser={this.state.osmUser} 
+      //   username={this.state.username} 
+      //   password={this.state.password} 
+      //   handleLoginChange={this.handleLoginChange} 
+      //   handleLoginSubmit={this.handleLoginSubmit} /> 
+      // </div>
+
+        //     <Navbar 
+        // osmUser= {this.state.osmUser} 
+        // lon={this.state.entranceLongitude} 
+        // lat={this.state.entranceLatitude} 
+        // createNode={this.createNode} 
+        // handleChange={this.handleEntranceChange} 
+        // entranceType={this.state.entranceType} />
   
   render() {
     return (
-      <div className="App">        
-      <Navbar osmUser= {this.state.osmUser} lon={this.state.entranceLongitude} lat={this.state.entranceLatitude} createNode={this.createNode} handleChange={this.handleEntranceChange} entranceType={this.state.entranceType} />
-      <Map updateLongitude = {this.updateLongitude} updateLatitude = {this.updateLatitude} />
-      <Modal show={this.state.isOpen} onClose={this.toggleModal} onLogin={this.osmLogin} osmUser={this.state.osmUser} username={this.state.username} password={this.state.password} handleLoginChange={this.handleLoginChange} handleLoginSubmit={this.handleLoginSubmit} /> 
+      <div className="App">
+      <Modal
+        id='foo'
+        open={this.state.modalOpen}
+        header='Welcome to OSM Entrance Editor'
+        actions={false}
+        >
+        
+        <LoginForm osmLogin={this.osmLogin} osmUser={this.state.osmUser} />
+
+      </Modal>
+
+      <Sidenav 
+        osmUser= {this.state.osmUser} 
+        lon={this.state.entranceLongitude} 
+        lat={this.state.entranceLatitude} 
+        createNode={this.createNode} 
+        handleChange={this.handleEntranceChange} 
+        entranceType={this.state.entranceType} 
+        handleAddress={this.handleAddressChange}
+        Number={this.state.Number}
+        Street={this.state.Street}
+        Code={this.state.Code}
+        City={this.state.City}
+        />
+
+
+      <Map 
+        updateLongitude = {this.updateLongitude} 
+        updateLatitude = {this.updateLatitude} />
       </div>
       );
     }

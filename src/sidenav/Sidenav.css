@@ -1,0 +1,31 @@
+span.character-counter {
+	font-size: 0px;
+	color: #FFFFFF;
+}
+
+/*[type="checkbox"]:checked+label:before {
+    border-right: 2px solid #1565c0;
+    border-bottom: 2px solid #1565c0;
+}*/
+
+.button {
+    margin-left: auto;
+  margin-right: auto;
+}
+
+[type="checkbox"].filled-in:checked+label:after {
+    border: 2px solid #1565c0;
+    background-color: #1565c0;
+
+}
+
+input[type=text]:not(.browser-default):focus:not([readonly]) {
+    border-bottom: 1px solid #1565c0;
+    box-shadow: 0 1px 0 0 #1565c0;
+}
+
+
+input[type=text]:not(.browser-default):focus:not([readonly])+label {
+    color: #1565c0;
+}
+
