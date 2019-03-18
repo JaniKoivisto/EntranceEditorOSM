@@ -10,8 +10,6 @@ class App extends Component {
       entranceLongitude: new Number(),
       entranceLatitude: new Number(),
       isOpen: false,
-      username:'',
-      password:'',
       entranceType: ''
     };
     
@@ -74,10 +72,7 @@ class App extends Component {
   };
   
   createNode() {
-    const encodedUsername = new Buffer(this.state.username).toString('base64');
-    const encodedPassword = new Buffer(this.state.password).toString('base64');
     let headers = new Headers();
-    headers.set('Authorization', 'Basic ' + encodedUsername + ":" + encodedPassword);
     headers.set('content-type', 'application/json');
     
     const addNode = async () => {
@@ -105,7 +100,7 @@ class App extends Component {
       <div className="App">        
       <Navbar osmUser= {this.state.osmUser} lon={this.state.entranceLongitude} lat={this.state.entranceLatitude} createNode={this.createNode} handleChange={this.handleEntranceChange} entranceType={this.state.entranceType} />
       <Map updateLongitude = {this.updateLongitude} updateLatitude = {this.updateLatitude} />
-      <Modal show={this.state.isOpen} onClose={this.toggleModal} username={this.state.username} password={this.state.password} handleLoginChange={this.handleLoginChange} handleLoginSubmit={this.handleLoginSubmit} /> 
+      <Modal show={this.state.isOpen} onClose={this.toggleModal} handleLoginChange={this.handleLoginChange} handleLoginSubmit={this.handleLoginSubmit} /> 
       </div>
       );
     }

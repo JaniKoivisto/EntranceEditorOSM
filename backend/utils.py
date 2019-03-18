@@ -1,10 +1,10 @@
 from flask import Flask
-import base64
+from requests_oauthlib import OAuth1Session
 
-def authDecoder(request):
-    method, auth = request.headers.get('Authorization').split(' ')
-    if method.lower() == 'basic':
-        username, password = auth.split(':')
-        decoded_username = base64.b64decode(username).decode('utf-8')
-        decoded_password = base64.b64decode(password).decode('utf-8')
-    return decoded_username, decoded_password
+def createOauthSession(client_id, client_secret, oauth_token, oauth_token_secret, verifier, token_url):
+    oauth = OAuth1Session(client_id,
+                   client_secret=client_secret,
+                   resource_owner_key=oauth_token,
+                   resource_owner_secret=oauth_token_secret,
+                   verifier=verifier)
+    return oauth.fetch_access_token(token_url)

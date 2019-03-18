@@ -1,5 +1,5 @@
 from flask import Flask, request, jsonify, url_for, redirect, session
-from requests_oauthlib import OAuth1Session, OAuth1
+from requests_oauthlib import OAuth1Session
 from flask_cors import CORS
 import osmService as service
 import utils
@@ -30,15 +30,12 @@ def addNote():
 
 @app.route("/api/node", methods=['POST', 'OPTIONS'])
 def addNode():
-    decoded_username = ''
-    decoded_password = ''
-    
-    if request.headers.get('Authorization'):
-        decoded_username, decoded_password = utils.authDecoder(request)
+    oauth = utils.createOAuthSession(client_id, client_secret, session.get('oauth_token'), session.get('oauth_token_secret'),
+        session.get('verifier'), token_url)
 
     changeset_id = request.args.get('changesetid')
     if changeset_id is None:
-        resp_text, resp_code = service.addChangeset(decoded_username, decoded_password)
+        resp_text, resp_code = service.addChangeset(oauth)
         if resp_code is 200:
             changeset_id = resp_text
         else:
@@ -61,7 +58,7 @@ def addNode():
         if address_attribute in request.args:
             entrance_address_attributes_feature[address_attribute] = request.args.get(address_attribute)
 
-    response = service.addNode(changeset_id, lon, lat, entrance_attributes_feature, entrance_address_attributes_feature, decoded_username, decoded_password)
+    response = service.addNode(changeset_id, lon, lat, entrance_attributes_feature, entrance_address_attributes_feature, oauth)
     return response
 
 @app.route("/api/node", methods=['GET'])
@@ -89,15 +86,8 @@ def loginOAUTH():
 
 @app.route('/api/login/callback', methods=['GET'])
 def authorized():
-    verifier = request.args.get('oauth_verifier')
-    oauth = OAuth1Session(client_id,
-                   client_secret=client_secret,
-                   resource_owner_key=session.get('oauth_token'),
-                   resource_owner_secret=session.get('oauth_token_secret'),
-                   verifier=verifier)
-    oauth.fetch_access_token(token_url)
-    response = service.loginOSM(oauth)
-    return response
+    session['verifier'] = request.args.get('oauth_verifier')
+    return redirect(request.url_root)
 
 if __name__ == "__main__":
     app.run(debug=True)
