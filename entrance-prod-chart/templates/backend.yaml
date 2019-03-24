@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: entrance-backend
+spec:
+  selector:
+    matchLabels:
+      app: entrance-editor-osm
+      tier: backend
+      track: stable
+  replicas: {{ .Values.backendReplicaCount }}
+  template:
+    metadata:
+      labels:
+        app: entrance-editor-osm
+        tier: backend
+        track: stable
+    spec:
+      containers:
+        - name: entrance-backend
+          imagePullPolicy: Always
+          image: ""
+          ports:
+          - containerPort: 5000
+      imagePullSecrets:
+        - name: ecr-credentials
