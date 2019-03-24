@@ -139,7 +139,7 @@ class App extends Component {
         actions={false}
         >
         
-        <LoginForm osmLogin={this.osmLogin} osmUser={this.state.osmUser} />
+        <LoginForm osmLogin={this.handleLoginSubmit} osmUser={this.state.osmUser} />
 
       </Modal>
 
